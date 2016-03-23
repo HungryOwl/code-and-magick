@@ -1,0 +1,24 @@
+{
+  "name": "83457-code-and-magick",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Личный проект «Код и Магия» от HTML Academy",
+  "author": "Анна Новикова",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:htmlacademy-javascript/83457-code-and-magick.git"
+  },
+  "bugs": {
+    "url": "https://github.com/htmlacademy-javascript/83457-code-and-magick/issues"
+  },
+  "homepage": "https://github.com/htmlacademy-javascript/83457-code-and-magick",
+  "devDependencies": {
+    "eslint": "2.4.0"
+  },
+  "scripts": {
+    "test": "eslint build/js"
+  },
+  "engines": {
+    "node": "^5.0.0"
+  }
+}
