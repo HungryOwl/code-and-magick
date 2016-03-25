@@ -19,17 +19,17 @@ var getMessage = function(a, b) {
       sum = 0;
 
       for (i = 0; i < a.length; i++) {
-        sum = sum + a[i];
+        sum += a[i];
       }
 
       return 'Я прошел ' + sum + ' шагов';
     } else if (typeofa === 'object' && typeofb === 'object') {
         lenght = 0;
 
-        a.length > b.length ? maslength = b.length : maslength = a.length;
+        maslength = Math.max(a.length, b.length);
 
         for (i = 0; i < maslength; i++) {
-          lenght = lenght + (a[i] * b[i]);
+          lenght += (a[i] * b[i]);
         }
 
         return 'Я прошел ' + lenght + ' Метров';
