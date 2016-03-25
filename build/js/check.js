@@ -28,12 +28,6 @@ var getMessage = function(a, b) {
 
         a.length > b.length ? maslength = b.length : maslength = a.length;
 
-        /*if (a.length > b.length) {
-          maslength = b.length;
-        } else {
-          maslength = a.length;
-        }*/
-
         for (i = 0; i < maslength; i++) {
           lenght = lenght + (a[i] * b[i]);
         }
