@@ -1,7 +1,7 @@
 # Личный проект «Код и Магия» [![Build status][travis-image]][travis-url] [![Dependency status][dependency-image]][dependency-url]
 
 * Студент: [Анна Новикова](https://up.htmlacademy.ru/javascript/4/user/83457).
-* Наставник: `Неизвестно`.
+* Наставник: [Софья Ильинова](https://up.htmlacademy.ru/javascript/4/user/393).
 
 ---
 
