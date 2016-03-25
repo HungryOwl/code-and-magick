@@ -1,7 +1,7 @@
 var getMessage = function(a, b) {
     var typeofa = typeof a;
     var typeofb = typeof b;
-    var length, maslength, sum, i;
+    var length, arrlength, sum, i;
 
     if (typeofa === 'boolean') {
       if (a) {
@@ -26,9 +26,9 @@ var getMessage = function(a, b) {
     } else if (typeofa === 'object' && typeofb === 'object') {
         length = 0;
 
-        maslength = Math.max(a.length, b.length);
+        arrlength = Math.max(a.length, b.length);
 
-        for (i = 0; i < maslength; i++) {
+        for (i = 0; i < arrlength; i++) {
           length += (a[i] * b[i]);
         }
 
