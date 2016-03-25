@@ -26,11 +26,13 @@ var getMessage = function(a, b) {
     } else if (typeofa === 'object' && typeofb === 'object') {
         lenght = 0;
 
-        if (a.length > b.length) {
+        a.length > b.length ? maslength = b.length : maslength = a.length;
+
+        /*if (a.length > b.length) {
           maslength = b.length;
         } else {
           maslength = a.length;
-        }
+        }*/
 
         for (i = 0; i < maslength; i++) {
           lenght = lenght + (a[i] * b[i]);
