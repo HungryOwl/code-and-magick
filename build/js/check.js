@@ -1,10 +1,10 @@
 var getMessage = function(a, b) {
     var typeofa = typeof a;
     var typeofb = typeof b;
-    var lenght, maslength, sum, i;
+    var length, maslength, sum, i;
 
     if (typeofa === 'boolean') {
-      if (a === true) {
+      if (a) {
         return 'Я попал в ' + b;
       } else {
         return 'Я никуда не попал';
@@ -22,16 +22,16 @@ var getMessage = function(a, b) {
         sum += a[i];
       }
 
-      return 'Я прошел ' + sum + ' шагов';
+      return 'Я прошёл ' + sum + ' шагов';
     } else if (typeofa === 'object' && typeofb === 'object') {
-        lenght = 0;
+        length = 0;
 
         maslength = Math.max(a.length, b.length);
 
         for (i = 0; i < maslength; i++) {
-          lenght += (a[i] * b[i]);
+          length += (a[i] * b[i]);
         }
 
-        return 'Я прошел ' + lenght + ' Метров';
+        return 'Я прошёл ' + length + ' метров';
     }
 };
