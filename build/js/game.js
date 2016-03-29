@@ -376,12 +376,16 @@
 
     /*Наш прямоугольничек с текстом*/
     _drawrectangle: function(sentence) {
+      var ctx = this.ctx;
       var startX = 400;
       var startY = 100;
-      var balloonWidth = 200;
+      var balloonWidth = 150;
       var balloonHeight = 100;
       var shadowXY = 0;
       var color = 'rgba(0, 0, 0, 0.7)';
+      var PADDING_LEFT = 20;
+      var padding_top = 20;
+
 
       this.ctx.fillStyle = color;
       this.ctx.font = '16px PT Mono';
@@ -390,38 +394,38 @@
             startX -= shadowXY;
             startY -= shadowXY;
 
-            this.ctx.fillStyle = color;
+            ctx.fillStyle = color;
 
-            this.ctx.beginPath();
-            this.ctx.moveTo(startX, startY);
-            this.ctx.lineTo(startX + balloonWidth, startY);
-            this.ctx.lineTo(startX + balloonWidth, startY + balloonHeight);
-            this.ctx.lineTo(startX, startY + balloonHeight);
-            this.ctx.lineTo(startX, startY);
-            this.ctx.closePath();
+            ctx.beginPath();
+            ctx.moveTo(startX, startY);
+            ctx.lineTo(startX + balloonWidth, startY);
+            ctx.lineTo(startX + balloonWidth, startY + balloonHeight);
+            ctx.lineTo(startX, startY + balloonHeight);
+            ctx.lineTo(startX, startY);
+            ctx.closePath();
 
-            this.ctx.fill();
+            ctx.fill();
 
             shadowXY += 10;
             color = '#ffffff';
           };
 
           color = 'black';
-          this.ctx.fillStyle = color;
+          ctx.fillStyle = color;
 
-          this.ctx.fillText(sentence[0], startX + 2 * shadowXY, startY + 2 * shadowXY);
-          this.ctx.fillText(sentence[1], startX + 2 * shadowXY, startY + 3 * shadowXY);
-          this.ctx.fillText(sentence[2], startX + 2 * shadowXY, startY + 4 * shadowXY);
+          sentence.forEach(function(item, j, sentence) {
+            ctx.fillText(item, startX + PADDING_LEFT, startY + (j + 1.5) * padding_top);
+
+          });
     },
 
     /**
      * Отрисовка экрана паузы.
      */
     _drawPauseScreen: function() {
-
       switch (this.state.currentStatus) {
         case Verdict.WIN:
-             this._drawrectangle([ 'Эпик-вин!', 'Я только что', 'сжег дерево' ]);
+            this._drawrectangle([ 'Эпик-вин!', 'Я только что', 'сжег дерево' ]);
           break;
         case Verdict.FAIL:
             this._drawrectangle([ 'Продул', 'все, что', 'можно' ]);
@@ -430,7 +434,7 @@
             this._drawrectangle([ 'Музыкальная', 'пауза вместе', 'с Басковым!!' ]);
           break;
         case Verdict.INTRO:
-            this._drawrectangle([ 'Поигрвй', 'со мной', 'нежно!' ]);
+            this._drawrectangle([ 'Поиграй', 'со мной', 'нежно!' ]);
           break;
       }
     },
