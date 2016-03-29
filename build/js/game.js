@@ -374,10 +374,8 @@
       }
     },
 
-    /**
-     * Отрисовка экрана паузы.
-     */
-    _drawPauseScreen: function() {
+    /*Наш прямоугольничек с текстом*/
+    _drawrectangle: function(sentence) {
       var startX = 400;
       var startY = 100;
       var balloonWidth = 200;
@@ -388,123 +386,51 @@
       this.ctx.fillStyle = color;
       this.ctx.font = '16px PT Mono';
 
+      for (var i = 0; i < 2; i++) {
+            startX -= shadowXY;
+            startY -= shadowXY;
+
+            this.ctx.fillStyle = color;
+
+            this.ctx.beginPath();
+            this.ctx.moveTo(startX, startY);
+            this.ctx.lineTo(startX + balloonWidth, startY);
+            this.ctx.lineTo(startX + balloonWidth, startY + balloonHeight);
+            this.ctx.lineTo(startX, startY + balloonHeight);
+            this.ctx.lineTo(startX, startY);
+            this.ctx.closePath();
+
+            this.ctx.fill();
+
+            shadowXY += 10;
+            color = '#ffffff';
+          };
+
+          color = 'black';
+          this.ctx.fillStyle = color;
+
+          this.ctx.fillText(sentence[0], startX + 2 * shadowXY, startY + 2 * shadowXY);
+          this.ctx.fillText(sentence[1], startX + 2 * shadowXY, startY + 3 * shadowXY);
+          this.ctx.fillText(sentence[2], startX + 2 * shadowXY, startY + 4 * shadowXY);
+    },
+
+    /**
+     * Отрисовка экрана паузы.
+     */
+    _drawPauseScreen: function() {
+
       switch (this.state.currentStatus) {
         case Verdict.WIN:
-          for (var i = 0; i < 2; i++) {
-            startX -= shadowXY;
-            startY -= shadowXY;
-
-            this.ctx.fillStyle = color;
-
-            this.ctx.beginPath();
-            this.ctx.moveTo(startX, startY);
-            this.ctx.lineTo(startX + balloonWidth, startY);
-            this.ctx.lineTo(startX + balloonWidth, startY + balloonHeight);
-            this.ctx.lineTo(startX, startY + balloonHeight);
-            this.ctx.lineTo(startX, startY);
-            this.ctx.closePath();
-
-            this.ctx.fill();
-
-            shadowXY += 10;
-            color = '#ffffff';
-          };
-
-            color = 'black';
-            this.ctx.fillStyle = color;
-
-
-            this.ctx.fillText('Эпик-вин!', startX + 2 * shadowXY, startY + 2 * shadowXY);
-            this.ctx.fillText('Я только что', startX + 2 * shadowXY, startY + 3 * shadowXY);
-            this.ctx.fillText('сжег дерево', startX + 2 * shadowXY, startY + 4 * shadowXY);
-
+             this._drawrectangle([ 'Эпик-вин!', 'Я только что', 'сжег дерево' ]);
           break;
         case Verdict.FAIL:
-          for (var i = 0; i < 2; i++) {
-            startX -= shadowXY;
-            startY -= shadowXY;
-
-            this.ctx.fillStyle = color;
-
-            this.ctx.beginPath();
-            this.ctx.moveTo(startX, startY);
-            this.ctx.lineTo(startX + balloonWidth, startY);
-            this.ctx.lineTo(startX + balloonWidth, startY + balloonHeight);
-            this.ctx.lineTo(startX, startY + balloonHeight);
-            this.ctx.lineTo(startX, startY);
-            this.ctx.closePath();
-
-            this.ctx.fill();
-
-            shadowXY += 10;
-            color = '#ffffff';
-          };
-
-            color = 'black';
-            this.ctx.fillStyle = color;
-
-
-            this.ctx.fillText('Продул', startX + 2 * shadowXY, startY + 2 * shadowXY);
-            this.ctx.fillText('все, что', startX + 2 * shadowXY, startY + 3 * shadowXY);
-            this.ctx.fillText('можно', startX + 2 * shadowXY, startY + 4 * shadowXY);
-
+            this._drawrectangle([ 'Продул', 'все, что', 'можно' ]);
           break;
         case Verdict.PAUSE:
-          for (var i = 0; i < 2; i++) {
-            startX -= shadowXY;
-            startY -= shadowXY;
-
-            this.ctx.fillStyle = color;
-
-            this.ctx.beginPath();
-            this.ctx.moveTo(startX, startY);
-            this.ctx.lineTo(startX + balloonWidth, startY);
-            this.ctx.lineTo(startX + balloonWidth, startY + balloonHeight);
-            this.ctx.lineTo(startX, startY + balloonHeight);
-            this.ctx.lineTo(startX, startY);
-            this.ctx.closePath();
-
-            this.ctx.fill();
-
-            shadowXY += 10;
-            color = '#ffffff';
-          };
-
-            color = 'black';
-            this.ctx.fillStyle = color;
-
-            this.ctx.fillText('Музыкальная', startX + 2 * shadowXY, startY + 2 * shadowXY);
-            this.ctx.fillText('пауза вместе', startX + 2 * shadowXY, startY + 3 * shadowXY);
-            this.ctx.fillText('с Басковым!', startX + 2 * shadowXY, startY + 4 * shadowXY);
-
+            this._drawrectangle([ 'Музыкальная', 'пауза вместе', 'с Басковым!!' ]);
           break;
         case Verdict.INTRO:
-          for (var i = 0; i < 2; i++) {
-            startX -= shadowXY;
-            startY -= shadowXY;
-
-            this.ctx.fillStyle = color;
-
-            this.ctx.beginPath();
-            this.ctx.moveTo(startX, startY);
-            this.ctx.lineTo(startX + balloonWidth, startY);
-            this.ctx.lineTo(startX + balloonWidth, startY + balloonHeight);
-            this.ctx.lineTo(startX, startY + balloonHeight);
-            this.ctx.lineTo(startX, startY);
-            this.ctx.closePath();
-
-            this.ctx.fill();
-
-            shadowXY += 10;
-            color = '#ffffff';
-          };
-
-            color = 'black';
-            this.ctx.fillStyle = color;
-
-            this.ctx.fillText('Нажми уже', startX + shadowXY, startY + 2 * shadowXY);
-            this.ctx.fillText('долбаный пробел', startX + shadowXY, startY + 3 * shadowXY);
-            this.ctx.fillText('и поиграй в меня!', startX + shadowXY, startY + 4 * shadowXY);
+            this._drawrectangle([ 'Поигрвй', 'со мной', 'нежно!' ]);
           break;
       }
     },
