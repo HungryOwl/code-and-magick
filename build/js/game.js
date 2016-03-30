@@ -389,8 +389,6 @@
       var TEXT_COLOR = 'black'
       var SHADOW_COLOR = 'rgba(0, 0, 0, 0.7)'
 
-
-      ctx.font = '16px PT Mono';
       ctx.fillStyle = SHADOW_COLOR;
 
       for (var i = 0; i < 2; i++) {
@@ -411,6 +409,7 @@
         ctx.fillStyle = BOX_COLOR;
       };
 
+      ctx.font = '16px PT Mono';
       ctx.fillStyle = TEXT_COLOR;
 
       sentence.forEach(function(item, j, sentence) {
