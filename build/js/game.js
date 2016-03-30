@@ -424,16 +424,16 @@
     _drawPauseScreen: function() {
       switch (this.state.currentStatus) {
         case Verdict.WIN:
-            this._drawrectangle([ 'Эпик-вин!', 'Я только что', 'сжег дерево' ]);
+          this._drawrectangle([ 'Эпик-вин!', 'Я только что', 'сжег дерево' ]);
           break;
         case Verdict.FAIL:
-            this._drawrectangle([ 'Продул', 'все, что', 'можно' ]);
+          this._drawrectangle([ 'Продул', 'все, что', 'можно' ]);
           break;
         case Verdict.PAUSE:
-            this._drawrectangle([ 'Музыкальная', 'пауза вместе', 'с Басковым!!' ]);
+          this._drawrectangle([ 'Музыкальная', 'пауза вместе', 'с Басковым!!' ]);
           break;
         case Verdict.INTRO:
-            this._drawrectangle([ 'Поиграй', 'со мной', 'нежно!' ]);
+          this._drawrectangle([ 'Поиграй', 'со мной', 'нежно!' ]);
           break;
       }
     },
