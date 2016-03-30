@@ -375,21 +375,72 @@
     },
 
     /**
+     * Функция рисования плашки под текстом
+     * @param {number} Xcoordinate
+     * @param {number} Ycoordinate
+     * @param {number} width
+     * @param {number} height
+     * @param {string} color
+     */
+    _drawRectangle: function(Xcoordinate, Ycoordinate, width, height, color) {
+      this.ctx.fillStyle = color;
+
+      this.ctx.beginPath();
+      this.ctx.moveTo(Xcoordinate, Ycoordinate);
+      this.ctx.lineTo(Xcoordinate + width, Ycoordinate);
+      this.ctx.lineTo(Xcoordinate + width, Ycoordinate + height);
+      this.ctx.lineTo(Xcoordinate, Ycoordinate + height);
+      this.ctx.lineTo(Xcoordinate, Ycoordinate);
+      this.ctx.closePath();
+
+      this.ctx.fill();
+    },
+
+    /**
+     * Наш прямоугольничек с текстом
+     * @param {String[]} sentence
+     */
+    _drawTextRectangle: function(sentence) {
+      var startX = 400;
+      var startY = 100;
+      var shadowXY = 10;
+      var balloonWidth = 150;
+      var PADDING_LEFT = 20;
+      var PADDING_TOP = 10;
+      var LINE_HEIGHT = 20;
+      var balloonHeight = (2 * PADDING_TOP) + (sentence.length * LINE_HEIGHT);
+      var BOX_COLOR = '#ffffff';
+      var TEXT_COLOR = 'black';
+      var SHADOW_COLOR = 'rgba(0, 0, 0, 0.7)';
+      var TEXT_OFFSET = 4;
+
+      this._drawRectangle(startX + shadowXY, startY + shadowXY, balloonWidth, balloonHeight, SHADOW_COLOR);
+      this._drawRectangle(startX, startY, balloonWidth, balloonHeight, BOX_COLOR);
+
+      this.ctx.font = '16px PT Mono';
+      this.ctx.fillStyle = TEXT_COLOR;
+
+      sentence.forEach(function(item, j) {
+        this.ctx.fillText(item, startX + PADDING_LEFT, startY + ((j + 1) * LINE_HEIGHT) + PADDING_TOP - TEXT_OFFSET);
+      }, this);
+    },
+
+    /**
      * Отрисовка экрана паузы.
      */
     _drawPauseScreen: function() {
       switch (this.state.currentStatus) {
         case Verdict.WIN:
-          console.log('you have won!');
+          this._drawTextRectangle([ 'Эпик-вин!', 'Я только что', 'сжег дерево' ]);
           break;
         case Verdict.FAIL:
-          console.log('you have failed!');
+          this._drawTextRectangle([ 'Продул', 'все, что', 'можно' ]);
           break;
         case Verdict.PAUSE:
-          console.log('game is on pause!');
+          this._drawTextRectangle([ 'Музыкальная', 'пауза вместе', 'с Басковым!!' ]);
           break;
         case Verdict.INTRO:
-          console.log('welcome to the game! Press Space to start');
+          this._drawTextRectangle([ 'Поиграй', 'со мной', 'нежно', 'пожалуйста!' ]);
           break;
       }
     },
