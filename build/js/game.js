@@ -375,10 +375,8 @@
     },
 
     /**
-     * Функция
-     *
+     * Функция рисования плашки под текстом
      */
-
      _drawRectangle: function(Xcoordinate, Ycoordinate, width, height, color) {
       this.ctx.fillStyle = color;
 
