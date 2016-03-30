@@ -382,19 +382,17 @@
       var startY = 100;
       var balloonWidth = 150;
       var balloonHeight = 100;
-      var color = 'rgba(0, 0, 0, 0.7)';
       var shadowWXY = 0;
       var PADDING_LEFT = 20;
       var PADDING_TOP = 25;
 
-      this.ctx.fillStyle = color;
-      this.ctx.font = '16px PT Mono';
+
+      ctx.font = '16px PT Mono';
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
 
       for (var i = 0; i < 2; i++) {
         startX -= shadowWXY;
         startY -= shadowWXY;
-
-        ctx.fillStyle = color;
 
         ctx.beginPath();
         ctx.moveTo(startX, startY);
@@ -407,11 +405,10 @@
         ctx.fill();
 
         shadowWXY += 10;
-        color = '#ffffff';
+        ctx.fillStyle = '#ffffff';
       };
 
-      color = 'black';
-      ctx.fillStyle = color;
+      ctx.fillStyle = 'black';
 
       sentence.forEach(function(item, j, sentence) {
         ctx.fillText(item, startX + PADDING_LEFT, startY + (j + 1) * PADDING_TOP);
