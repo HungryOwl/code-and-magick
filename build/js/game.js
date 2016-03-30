@@ -377,6 +377,7 @@
     /*Наш прямоугольничек с текстом*/
 
     _drawrectangle: function(sentence) {
+      var i;
       var ctx = this.ctx;
       var startX = 400;
       var startY = 100;
@@ -391,7 +392,7 @@
 
       ctx.fillStyle = SHADOW_COLOR;
 
-      for (var i = 0; i < 2; i++) {
+      for (i = 0; i < 2; i++) {
         startX -= shadowWXY;
         startY -= shadowWXY;
 
@@ -412,7 +413,7 @@
       ctx.font = '16px PT Mono';
       ctx.fillStyle = TEXT_COLOR;
 
-      sentence.forEach(function(item, j, sentence) {
+      sentence.forEach(function(item, j) {
         ctx.fillText(item, startX + PADDING_LEFT, startY + (j + 1) * PADDING_TOP);
       });
     },
