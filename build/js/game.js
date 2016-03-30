@@ -375,26 +375,26 @@
     },
 
     /*Наш прямоугольничек с текстом*/
+
     _drawrectangle: function(sentence) {
       var ctx = this.ctx;
       var startX = 400;
       var startY = 100;
       var balloonWidth = 150;
       var balloonHeight = 100;
-      var shadowXY = 0;
-      var color = 'rgba(0, 0, 0, 0.7)';
+      var COLOR = 'rgba(0, 0, 0, 0.7)';
+      var SHADOWXY = 0;
       var PADDING_LEFT = 20;
-      var padding_top = 20;
+      var PADDING_TOP = 25;
 
-
-      this.ctx.fillStyle = color;
+      this.ctx.fillStyle = COLOR;
       this.ctx.font = '16px PT Mono';
 
       for (var i = 0; i < 2; i++) {
-            startX -= shadowXY;
-            startY -= shadowXY;
+            startX -= SHADOWXY;
+            startY -= SHADOWXY;
 
-            ctx.fillStyle = color;
+            ctx.fillStyle = COLOR;
 
             ctx.beginPath();
             ctx.moveTo(startX, startY);
@@ -406,16 +406,15 @@
 
             ctx.fill();
 
-            shadowXY += 10;
-            color = '#ffffff';
+            SHADOWXY += 10;
+            COLOR = '#ffffff';
           };
 
-          color = 'black';
-          ctx.fillStyle = color;
+          COLOR = 'black';
+          ctx.fillStyle = COLOR;
 
           sentence.forEach(function(item, j, sentence) {
-            ctx.fillText(item, startX + PADDING_LEFT, startY + (j + 1.5) * padding_top);
-
+            ctx.fillText(item, startX + PADDING_LEFT, startY + (j + 1) * PADDING_TOP);
           });
     },
 
