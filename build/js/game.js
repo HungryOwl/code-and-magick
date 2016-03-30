@@ -377,7 +377,7 @@
     /**
      * Функция рисования плашки под текстом
      */
-     _drawRectangle: function(Xcoordinate, Ycoordinate, width, height, color) {
+    _drawRectangle: function(Xcoordinate, Ycoordinate, width, height, color) {
       this.ctx.fillStyle = color;
 
       this.ctx.beginPath();
