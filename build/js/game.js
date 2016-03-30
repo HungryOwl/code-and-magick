@@ -375,24 +375,22 @@
     },
 
     /**
-     * Наш прямоугольничек
+     * Функция
      *
      */
 
      _drawRectangle: function(Xcoordinate, Ycoordinate, width, height, color) {
-      var ctx = this.ctx;
+      this.ctx.fillStyle = color;
 
-      ctx.fillStyle = color;
+      this.ctx.beginPath();
+      this.ctx.moveTo(Xcoordinate, Ycoordinate);
+      this.ctx.lineTo(Xcoordinate + width, Ycoordinate);
+      this.ctx.lineTo(Xcoordinate + width, Ycoordinate + height);
+      this.ctx.lineTo(Xcoordinate, Ycoordinate + height);
+      this.ctx.lineTo(Xcoordinate, Ycoordinate);
+      this.ctx.closePath();
 
-      ctx.beginPath();
-      ctx.moveTo(Xcoordinate, Ycoordinate);
-      ctx.lineTo(Xcoordinate + width, Ycoordinate);
-      ctx.lineTo(Xcoordinate + width, Ycoordinate + height);
-      ctx.lineTo(Xcoordinate, Ycoordinate + height);
-      ctx.lineTo(Xcoordinate, Ycoordinate);
-      ctx.closePath();
-
-      ctx.fill();
+      this.ctx.fill();
     },
 
     /**
@@ -400,31 +398,28 @@
      * @param {String[]} sentence
      */
     _drawTextRectangle: function(sentence) {
-      var ctx = this.ctx;
       var startX = 400;
       var startY = 100;
       var shadowXY = 10;
       var balloonWidth = 150;
-      var balloonHeight;
       var PADDING_LEFT = 20;
       var PADDING_TOP = 10;
       var LINE_HEIGHT = 20;
+      var balloonHeight = (2 * PADDING_TOP) + (sentence.length * LINE_HEIGHT);
       var BOX_COLOR = '#ffffff';
       var TEXT_COLOR = 'black';
       var SHADOW_COLOR = 'rgba(0, 0, 0, 0.7)';
       var TEXT_OFFSET = 4;
 
-      balloonHeight = (2 * PADDING_TOP) + (sentence.length * LINE_HEIGHT);
-
       this._drawRectangle(startX + shadowXY, startY + shadowXY, balloonWidth, balloonHeight, SHADOW_COLOR);
       this._drawRectangle(startX, startY, balloonWidth, balloonHeight, BOX_COLOR);
 
-      ctx.font = '16px PT Mono';
-      ctx.fillStyle = TEXT_COLOR;
+      this.ctx.font = '16px PT Mono';
+      this.ctx.fillStyle = TEXT_COLOR;
 
       sentence.forEach(function(item, j) {
-        ctx.fillText(item, startX + PADDING_LEFT, startY + ((j + 1) * LINE_HEIGHT) + PADDING_TOP - TEXT_OFFSET);
-      });
+        this.ctx.fillText(item, startX + PADDING_LEFT, startY + ((j + 1) * LINE_HEIGHT) + PADDING_TOP - TEXT_OFFSET);
+      }, this);
     },
 
     /**
