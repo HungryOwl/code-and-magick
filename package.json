@@ -6,17 +6,21 @@
   "author": "Анна Новикова",
   "repository": {
     "type": "git",
-    "url": "git@github.com:htmlacademy-javascript/83457-code-and-magick.git"
+    "url": "git://github.com/htmlacademy-javascript/83457-code-and-magick.git"
   },
   "bugs": {
     "url": "https://github.com/htmlacademy-javascript/83457-code-and-magick/issues"
   },
   "homepage": "https://github.com/htmlacademy-javascript/83457-code-and-magick",
-  "devDependencies": {
-    "eslint": "2.4.0"
+  "dependencies": {
+    "eslint": "^2.4.0",
+    "webpack": "^1.12.14",
+    "webpack-dev-server": "^1.14.1"
   },
   "scripts": {
-    "test": "eslint build/js"
+    "build": "webpack --config webpack.config.js",
+    "test": "eslint src",
+    "start": "webpack-dev-server --watch --config webpack.config.js"
   },
   "engines": {
     "node": "^5.0.0"
