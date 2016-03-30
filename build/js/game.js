@@ -385,10 +385,13 @@
       var shadowWXY = 0;
       var PADDING_LEFT = 20;
       var PADDING_TOP = 25;
+      var BOX_COLOR = '#ffffff';
+      var TEXT_COLOR = 'black'
+      var SHADOW_COLOR = 'rgba(0, 0, 0, 0.7)'
 
 
       ctx.font = '16px PT Mono';
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+      ctx.fillStyle = SHADOW_COLOR;
 
       for (var i = 0; i < 2; i++) {
         startX -= shadowWXY;
@@ -405,10 +408,10 @@
         ctx.fill();
 
         shadowWXY += 10;
-        ctx.fillStyle = '#ffffff';
+        ctx.fillStyle = BOX_COLOR;
       };
 
-      ctx.fillStyle = 'black';
+      ctx.fillStyle = TEXT_COLOR;
 
       sentence.forEach(function(item, j, sentence) {
         ctx.fillText(item, startX + PADDING_LEFT, startY + (j + 1) * PADDING_TOP);
