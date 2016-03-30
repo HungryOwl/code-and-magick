@@ -412,6 +412,7 @@
       var BOX_COLOR = '#ffffff';
       var TEXT_COLOR = 'black';
       var SHADOW_COLOR = 'rgba(0, 0, 0, 0.7)';
+      var TEXT_OFFSET = 4;
 
       balloonHeight = (2 * PADDING_TOP) + (sentence.length * LINE_HEIGHT);
 
@@ -422,7 +423,7 @@
       ctx.fillStyle = TEXT_COLOR;
 
       sentence.forEach(function(item, j) {
-        ctx.fillText(item, startX + PADDING_LEFT, startY + ((j + 1) * LINE_HEIGHT) + PADDING_TOP);
+        ctx.fillText(item, startX + PADDING_LEFT, startY + ((j + 1) * LINE_HEIGHT) + PADDING_TOP - TEXT_OFFSET);
       });
     },
 
