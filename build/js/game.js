@@ -375,50 +375,54 @@
     },
 
     /**
-     * Наш прямоугольничек с текстом
+     * Наш прямоугольничек
+     *
      */
-    _drawrectangle: function(sentence) {
-      var i = 0;
+
+     _drawRectangle: function(Xcoordinate, Ycoordinate, width, height, color) {
+      var ctx = this.ctx;
+
+      ctx.fillStyle = color;
+
+      ctx.beginPath();
+      ctx.moveTo(Xcoordinate, Ycoordinate);
+      ctx.lineTo(Xcoordinate + width, Ycoordinate);
+      ctx.lineTo(Xcoordinate + width, Ycoordinate + height);
+      ctx.lineTo(Xcoordinate, Ycoordinate + height);
+      ctx.lineTo(Xcoordinate, Ycoordinate);
+      ctx.closePath();
+
+      ctx.fill();
+    },
+
+    /**
+     * Наш прямоугольничек с текстом
+     * @param {String[]} sentence
+     */
+    _drawTextRectangle: function(sentence) {
       var ctx = this.ctx;
       var startX = 400;
       var startY = 100;
+      var shadowXY = 10;
       var balloonWidth = 150;
       var balloonHeight;
-      var shadowXY = 0;
       var PADDING_LEFT = 20;
-      var PADDING_TOP = 35;
+      var PADDING_TOP = 10;
       var LINE_HEIGHT = 20;
       var BOX_COLOR = '#ffffff';
       var TEXT_COLOR = 'black';
       var SHADOW_COLOR = 'rgba(0, 0, 0, 0.7)';
 
-      ctx.fillStyle = SHADOW_COLOR;
+      balloonHeight = (2 * PADDING_TOP) + (sentence.length * LINE_HEIGHT);
 
-      balloonHeight = (2 * PADDING_TOP) + ((sentence.length - 1) * LINE_HEIGHT);
-
-      for (i = 0; i < 2; i++) {
-        startX -= shadowXY;
-        startY -= shadowXY;
-
-        ctx.beginPath();
-        ctx.moveTo(startX, startY);
-        ctx.lineTo(startX + balloonWidth, startY);
-        ctx.lineTo(startX + balloonWidth, startY + balloonHeight);
-        ctx.lineTo(startX, startY + balloonHeight);
-        ctx.lineTo(startX, startY);
-        ctx.closePath();
-
-        ctx.fill();
-
-        shadowXY += 10;
-        ctx.fillStyle = BOX_COLOR;
-      }
+      this._drawRectangle(startX + shadowXY, startY + shadowXY, balloonWidth, balloonHeight, SHADOW_COLOR);
+      this._drawRectangle(startX, startY, balloonWidth, balloonHeight, BOX_COLOR);
 
       ctx.font = '16px PT Mono';
       ctx.fillStyle = TEXT_COLOR;
 
       sentence.forEach(function(item, j) {
-        ctx.fillText(item, startX + PADDING_LEFT, startY + (j * LINE_HEIGHT) + PADDING_TOP);
+        ctx.fillText(item, startX + PADDING_LEFT, startY + ((j + 1) * LINE_HEIGHT) + PADDING_TOP);
       });
     },
 
@@ -428,16 +432,16 @@
     _drawPauseScreen: function() {
       switch (this.state.currentStatus) {
         case Verdict.WIN:
-          this._drawrectangle([ 'Эпик-вин!', 'Я только что', 'сжег дерево' ]);
+          this._drawTextRectangle([ 'Эпик-вин!', 'Я только что', 'сжег дерево' ]);
           break;
         case Verdict.FAIL:
-          this._drawrectangle([ 'Продул', 'все, что', 'можно' ]);
+          this._drawTextRectangle([ 'Продул', 'все, что', 'можно' ]);
           break;
         case Verdict.PAUSE:
-          this._drawrectangle([ 'Музыкальная', 'пауза вместе', 'с Басковым!!' ]);
+          this._drawTextRectangle([ 'Музыкальная', 'пауза вместе', 'с Басковым!!' ]);
           break;
         case Verdict.INTRO:
-          this._drawrectangle([ 'Поиграй', 'со мной', 'нежно', 'пожалуйста!' ]);
+          this._drawTextRectangle([ 'Поиграй', 'со мной', 'нежно', 'пожалуйста!' ]);
           break;
       }
     },
