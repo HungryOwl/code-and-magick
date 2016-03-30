@@ -377,20 +377,23 @@
     /*Наш прямоугольничек с текстом*/
 
     _drawrectangle: function(sentence) {
-      var i;
+      var i = 0;
       var ctx = this.ctx;
       var startX = 400;
       var startY = 100;
       var balloonWidth = 150;
-      var balloonHeight = 100;
+      var balloonHeight;
       var shadowWXY = 0;
       var PADDING_LEFT = 20;
-      var PADDING_TOP = 25;
+      var PADDING_TOP = 35;
+      var LINE_HEIGHT = 20;
       var BOX_COLOR = '#ffffff';
-      var TEXT_COLOR = 'black'
-      var SHADOW_COLOR = 'rgba(0, 0, 0, 0.7)'
+      var TEXT_COLOR = 'black';
+      var SHADOW_COLOR = 'rgba(0, 0, 0, 0.7)';
 
       ctx.fillStyle = SHADOW_COLOR;
+
+      balloonHeight = (2 * PADDING_TOP) + ((sentence.length - 1) * LINE_HEIGHT);
 
       for (i = 0; i < 2; i++) {
         startX -= shadowWXY;
@@ -408,13 +411,17 @@
 
         shadowWXY += 10;
         ctx.fillStyle = BOX_COLOR;
-      };
+      }
 
       ctx.font = '16px PT Mono';
       ctx.fillStyle = TEXT_COLOR;
 
+      ctx.fillText(sentence[0], startX + PADDING_LEFT, startY + PADDING_TOP);
+
       sentence.forEach(function(item, j) {
-        ctx.fillText(item, startX + PADDING_LEFT, startY + (j + 1) * PADDING_TOP);
+        if (j >= 1) {
+          ctx.fillText(item, startX + PADDING_LEFT, startY + (j * LINE_HEIGHT) + PADDING_TOP);
+        }
       });
     },
 
@@ -433,7 +440,7 @@
           this._drawrectangle([ 'Музыкальная', 'пауза вместе', 'с Басковым!!' ]);
           break;
         case Verdict.INTRO:
-          this._drawrectangle([ 'Поиграй', 'со мной', 'нежно!' ]);
+          this._drawrectangle([ 'Поиграй', 'со мной', 'нежно', 'пожалуйста!' ]);
           break;
       }
     },
