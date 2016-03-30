@@ -376,6 +376,11 @@
 
     /**
      * Функция рисования плашки под текстом
+     * @param {number} Xcoordinate
+     * @param {number} Ycoordinate
+     * @param {number} width
+     * @param {number} height
+     * @param {string} color
      */
     _drawRectangle: function(Xcoordinate, Ycoordinate, width, height, color) {
       this.ctx.fillStyle = color;
