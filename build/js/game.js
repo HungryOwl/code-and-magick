@@ -374,8 +374,9 @@
       }
     },
 
-    /*Наш прямоугольничек с текстом*/
-
+    /**
+     * Наш прямоугольничек с текстом
+     */
     _drawrectangle: function(sentence) {
       var i = 0;
       var ctx = this.ctx;
@@ -416,12 +417,8 @@
       ctx.font = '16px PT Mono';
       ctx.fillStyle = TEXT_COLOR;
 
-      ctx.fillText(sentence[0], startX + PADDING_LEFT, startY + PADDING_TOP);
-
       sentence.forEach(function(item, j) {
-        if (j >= 1) {
-          ctx.fillText(item, startX + PADDING_LEFT, startY + (j * LINE_HEIGHT) + PADDING_TOP);
-        }
+        ctx.fillText(item, startX + PADDING_LEFT, startY + (j * LINE_HEIGHT) + PADDING_TOP);
       });
     },
 
