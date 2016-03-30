@@ -383,7 +383,7 @@
       var startY = 100;
       var balloonWidth = 150;
       var balloonHeight;
-      var shadowWXY = 0;
+      var shadowXY = 0;
       var PADDING_LEFT = 20;
       var PADDING_TOP = 35;
       var LINE_HEIGHT = 20;
@@ -396,8 +396,8 @@
       balloonHeight = (2 * PADDING_TOP) + ((sentence.length - 1) * LINE_HEIGHT);
 
       for (i = 0; i < 2; i++) {
-        startX -= shadowWXY;
-        startY -= shadowWXY;
+        startX -= shadowXY;
+        startY -= shadowXY;
 
         ctx.beginPath();
         ctx.moveTo(startX, startY);
@@ -409,7 +409,7 @@
 
         ctx.fill();
 
-        shadowWXY += 10;
+        shadowXY += 10;
         ctx.fillStyle = BOX_COLOR;
       }
 
