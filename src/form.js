@@ -162,15 +162,15 @@
      * @const
      * @type {number}
      */
-    var MS_TO_DAYS_TO_MS = 1000 * 60 * 60 * 24;
+    var MS_IN_DAY = 1000 * 60 * 60 * 24;
 
     if (today.valueOf() < birthday.valueOf()) {
       birthday.setFullYear(today.getFullYear() - 1);
     }
 
-    daysFromMyBirthday = Math.floor((today.valueOf() - birthday.valueOf()) / MS_TO_DAYS_TO_MS) * MS_TO_DAYS_TO_MS;
+    daysFromMyBirthday = Math.floor((today.valueOf() - birthday.valueOf()) / MS_IN_DAY) * MS_IN_DAY;
 
-    return Math.floor(today.valueOf() / MS_TO_DAYS_TO_MS) * MS_TO_DAYS_TO_MS + daysFromMyBirthday;
+    return Math.floor(today.valueOf() / MS_IN_DAY) * MS_IN_DAY + daysFromMyBirthday;
   }
 
   /**
