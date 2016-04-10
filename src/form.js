@@ -39,7 +39,7 @@
   var reviewTextLabel = reviewField.querySelector('.review-fields-text');
 
   /**
-   * Кладем в константу кнопку отправки формы
+   * Кнопка отправки формы
    * @const
    * @type {HTMLButtonElement}
    * @see https://developer.mozilla.org/en-US/docs/Web/API/HTMLButtonElement
@@ -55,10 +55,9 @@
   var reviewMarkCollection = form.elements['review-mark'];
 
   /**
-   * Проверяет, правильно ли заполнено любое поле, возвращает Boolean
+   * Проверяем, правильно ли заполнено любое поле
    * @param {HTMLInputElement|HTMLTextAreaElement} element Проверяемый инпут
    * @returns {Boolean} Верно ли он заполнен
-   * @see https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement
    * @see https://developer.mozilla.org/en-US/docs/Web/API/HTMLTextAreaElement
    */
   function isInputCorrect(element) {
@@ -66,7 +65,7 @@
   }
 
   /**
-   * Проверяет, правильно ли заполнена форма
+   * Проверяем, правильно ли заполнена вся форма
    */
   function validateForm() {
     var isTextCorrect, isNameCorrect, isFormCorrect;
@@ -91,14 +90,6 @@
     reviewField.classList.toggle('invisible', isFormCorrect);
 
     reviewSubmit.disabled = !isFormCorrect;
-
-    /*var a = !(isFormCorrect);
-
-    if (a === true) {
-      reviewSubmit.disabled = true;
-    } else {
-      reviewSubmit.disabled = false;
-    }*/
   }
 
   validateForm();
