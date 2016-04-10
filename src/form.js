@@ -3,12 +3,11 @@
  * Валидируем форму
  */
 (function() {
+  var browserCookies = require('browser-cookies');
   var i;
   var formContainer = document.querySelector('.overlay-container');
   var formOpenButton = document.querySelector('.reviews-controls-new');
   var formCloseButton = document.querySelector('.review-form-close');
-
-  var browserCookies = require('browser-cookies');
 
   /**
    * Ищем саму форму в document
@@ -130,47 +129,72 @@
   };
 
   /**
-   * Записываем Куки перед отправкой формы
-   * @param  {Date}
-   * @return {[type]}
+   * Вычисляем количество милисекунд, прошедших со дня моего рождения до текущей даты
+   * @return {number}
    */
-  form.addEventListener('submit', function(event) {
-    event.preventDefault();
+  function getDateToExpire() {
+    /**
+     * Сегодняшняя дата
+     * @type {Date}
+     */
+    var today = new Date();
 
-    var myBirthday = new Date('1985-12-8');
-    var todayDay = new Date();
+    /**
+     * Вычисляем текущий год
+     * @type {Date}
+     */
+    var currentYear = today.getFullYear();
+
+    /**
+     * Устанавливаем текущий год у дня рождения
+     * @type {Date}
+     */
+    var birthday = new Date(currentYear, 12, 8);
+
+    /**
+     * Количество дней, прошедших со дня моего рождения
+     * @type {number}
+     */
     var daysFromMyBirthday;
-    var dateToExpire;
-    /*var formattedDateToExpire;*/
-    var reviewCookieMark;
 
-    myBirthday.setFullYear(todayDay.getFullYear());
+    /**
+     * Число для округления милисекунд до дней и обратно
+     * @const
+     * @type {number}
+     */
+    var MS_TO_DAYS_TO_MS = 1000 * 60 * 60 * 24;
 
-    if (todayDay.valueOf() < myBirthday.valueOf()) {
-      myBirthday.setFullYear(todayDay.getFullYear() - 1);
+    if (today.valueOf() < birthday.valueOf()) {
+      birthday.setFullYear(today.getFullYear() - 1);
     }
 
-    daysFromMyBirthday = (todayDay.valueOf() - myBirthday.valueOf());
-    dateToExpire = Date.now() + daysFromMyBirthday;
-    /*formattedDateToExpire = new Date(dateToExpire).toUTCString();*/
+    daysFromMyBirthday = Math.floor((today.valueOf() - birthday.valueOf()) / MS_TO_DAYS_TO_MS) * MS_TO_DAYS_TO_MS;
 
-    console.log('todayDay = ', todayDay);
-    console.log('myBirthday ', myBirthday);
-    console.log('daysFromMyBirthday ', daysFromMyBirthday);
-    console.log('dateToExpire ', dateToExpire);
-    /*console.log('formattedDateToExpire ', formattedDateToExpire);*/
+    return Math.floor(today.valueOf() / MS_TO_DAYS_TO_MS) * MS_TO_DAYS_TO_MS + daysFromMyBirthday;
+  }
+
+  /**
+   * Записываем Куки перед отправкой формы
+   * @param {submit} event
+   */
+  form.addEventListener('submit', function(event) {
+    /**
+     * Выбранная пользователем радиокнопка
+     */
+    var reviewCookieMark;
+    event.preventDefault();
 
     browserCookies.set('reviewName', reviewName.value);
-    console.log(reviewName, ' ', reviewName.value, {expires: dateToExpire});
+    console.log(reviewName, ' ', reviewName.value, {expires: getDateToExpire()});
 
     for (i = 0; i < reviewMarkCollection.length; i++) {
       if (reviewMarkCollection[i].checked) {
         reviewCookieMark = reviewMarkCollection[i];
         console.log(reviewMarkCollection[i], ' ', reviewMarkCollection[i].value);
-        browserCookies.set('reviewCookieMark', reviewCookieMark.value, {expires: dateToExpire});
+        browserCookies.set('reviewCookieMark', reviewCookieMark.value, {expires: getDateToExpire()});
       }
     }
 
-    /*this.submit();*/
+    this.submit();
   });
 })();
