@@ -8,6 +8,8 @@
   var formOpenButton = document.querySelector('.reviews-controls-new');
   var formCloseButton = document.querySelector('.review-form-close');
 
+  var browserCookies = require('browser-cookies');
+
   /**
    * Ищем саму форму в document
    * @const
@@ -92,6 +94,7 @@
     reviewSubmit.disabled = !isFormCorrect;
   }
 
+  reviewName.value = browserCookies.get('reviewName') || '';
   validateForm();
 
   /**
@@ -101,8 +104,14 @@
     /**
      * Обращение к элементу коллекции по индексу
      */
+
+    if (reviewMarkCollection[i].value === browserCookies.get('reviewCookieMark')) {
+      console.log(reviewMarkCollection[i]);
+      reviewMarkCollection[i].checked = true;
+    }
     reviewMarkCollection[i].addEventListener('change', validateForm);
   }
+
 
   /**
    * При изменении каждого элемента проверяем всю форму, см. validateForm
@@ -119,4 +128,49 @@
     evt.preventDefault();
     formContainer.classList.add('invisible');
   };
+
+  /**
+   * Записываем Куки перед отправкой формы
+   * @param  {Date}
+   * @return {[type]}
+   */
+  form.addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    var myBirthday = new Date('1985-12-8');
+    var todayDay = new Date();
+    var daysFromMyBirthday;
+    var dateToExpire;
+    /*var formattedDateToExpire;*/
+    var reviewCookieMark;
+
+    myBirthday.setFullYear(todayDay.getFullYear());
+
+    if (todayDay.valueOf() < myBirthday.valueOf()) {
+      myBirthday.setFullYear(todayDay.getFullYear() - 1);
+    }
+
+    daysFromMyBirthday = (todayDay.valueOf() - myBirthday.valueOf());
+    dateToExpire = Date.now() + daysFromMyBirthday;
+    /*formattedDateToExpire = new Date(dateToExpire).toUTCString();*/
+
+    console.log('todayDay = ', todayDay);
+    console.log('myBirthday ', myBirthday);
+    console.log('daysFromMyBirthday ', daysFromMyBirthday);
+    console.log('dateToExpire ', dateToExpire);
+    /*console.log('formattedDateToExpire ', formattedDateToExpire);*/
+
+    browserCookies.set('reviewName', reviewName.value);
+    console.log(reviewName, ' ', reviewName.value, {expires: dateToExpire});
+
+    for (i = 0; i < reviewMarkCollection.length; i++) {
+      if (reviewMarkCollection[i].checked) {
+        reviewCookieMark = reviewMarkCollection[i];
+        console.log(reviewMarkCollection[i], ' ', reviewMarkCollection[i].value);
+        browserCookies.set('reviewCookieMark', reviewCookieMark.value, {expires: dateToExpire});
+      }
+    }
+
+    /*this.submit();*/
+  });
 })();
