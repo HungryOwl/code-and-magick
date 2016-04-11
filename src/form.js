@@ -61,6 +61,10 @@
    * @returns {Boolean} Верно ли он заполнен
    * @see https://developer.mozilla.org/en-US/docs/Web/API/HTMLTextAreaElement
    */
+
+  var COOKIE_REVIEW_NAME = 'review-name';
+  var COOKIE_REVIEW_MARK = 'reviewMarkCollection';
+
   function isInputCorrect(element) {
     return !element.required || Boolean(element.value.trim());
   }
@@ -93,8 +97,9 @@
     reviewSubmit.disabled = !isFormCorrect;
   }
 
-  reviewName.value = browserCookies.get('reviewName') || reviewName.value;
-  reviewMarkCollection.value = browserCookies.get('reviewMarkCollection') || reviewMarkCollection.value;
+  reviewName.value = browserCookies.get(COOKIE_REVIEW_NAME) || reviewName.value;
+  reviewMarkCollection.value = browserCookies.get(COOKIE_REVIEW_MARK) || reviewMarkCollection.value;
+
   validateForm();
 
   /**
@@ -159,22 +164,21 @@
      */
     var MS_IN_DAY = 1000 * 60 * 60 * 24;
 
-    if (today.valueOf() < birthday.valueOf()) {
+    if (today < birthday) {
       birthday.setFullYear(currentYear - 1);
     }
 
     daysFromMyBirthday = Math.floor((today - birthday) / MS_IN_DAY) * MS_IN_DAY;
-    return Math.floor(today.valueOf() / MS_IN_DAY) * MS_IN_DAY + daysFromMyBirthday;
+    return today.valueOf() + daysFromMyBirthday;
   }
 
   /**
    * Записываем Куки перед отправкой формы
    */
   form.addEventListener('submit', function() {
-    browserCookies.set('reviewName', reviewName.value, ' ', {expires: getDateToExpire()});
-    console.log(reviewName, ' ', reviewName.value, {expires: getDateToExpire()});
+    var cookieOptExpires = {expires: getDateToExpire()};
 
-    browserCookies.set('reviewMarkCollection', reviewMarkCollection.value, {expires: getDateToExpire()});
-    console.log(reviewMarkCollection, ' ', reviewMarkCollection.value, ' ', {expires: getDateToExpire()});
+    browserCookies.set(COOKIE_REVIEW_NAME, reviewName.value, {expires: cookieOptExpires});
+    browserCookies.set(COOKIE_REVIEW_MARK, reviewMarkCollection.value, {expires: cookieOptExpires});
   });
 })();
