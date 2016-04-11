@@ -3,6 +3,7 @@
  * Валидируем форму
  */
 (function() {
+  var browserCookies = require('browser-cookies');
   var i;
   var formContainer = document.querySelector('.overlay-container');
   var formOpenButton = document.querySelector('.reviews-controls-new');
@@ -60,6 +61,10 @@
    * @returns {Boolean} Верно ли он заполнен
    * @see https://developer.mozilla.org/en-US/docs/Web/API/HTMLTextAreaElement
    */
+
+  var COOKIE_REVIEW_NAME = 'review-name';
+  var COOKIE_REVIEW_MARK = 'review-mark';
+
   function isInputCorrect(element) {
     return !element.required || Boolean(element.value.trim());
   }
@@ -92,6 +97,9 @@
     reviewSubmit.disabled = !isFormCorrect;
   }
 
+  reviewName.value = browserCookies.get(COOKIE_REVIEW_NAME) || reviewName.value;
+  reviewMarkCollection.value = browserCookies.get(COOKIE_REVIEW_MARK) || reviewMarkCollection.value;
+
   validateForm();
 
   /**
@@ -119,4 +127,51 @@
     evt.preventDefault();
     formContainer.classList.add('invisible');
   };
+
+  /**
+   * Вычисляем количество дней, прошедших со дня моего рождения до текущей даты
+   * @return {number}
+   */
+  function getDateToExpire() {
+    /**
+     * Сегодняшняя дата
+     * @type {Date}
+     */
+    var today = new Date();
+
+    /**
+     * Вычисляем текущий год
+     * @type {number}
+     */
+    var currentYear = today.getFullYear();
+
+    /**
+     * Устанавливаем текущий год у дня рождения
+     * @type {Date}
+     */
+    var birthday = new Date(currentYear, 11, 8);
+
+    /**
+     * Число милисекунд в дне
+     * @const
+     * @type {number}
+     */
+    var MS_IN_DAY = 1000 * 60 * 60 * 24;
+
+    if (today < birthday) {
+      birthday.setFullYear(currentYear - 1);
+    }
+
+    return Math.floor((today - birthday) / MS_IN_DAY);
+  }
+
+  /**
+   * Записываем Куки перед отправкой формы
+   */
+  form.addEventListener('submit', function() {
+    var cookieOptExpires = {expires: getDateToExpire()};
+
+    browserCookies.set(COOKIE_REVIEW_NAME, reviewName.value, cookieOptExpires);
+    browserCookies.set(COOKIE_REVIEW_MARK, reviewMarkCollection.value, cookieOptExpires);
+  });
 })();
