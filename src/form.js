@@ -169,9 +169,8 @@
 
   /**
    * Записываем Куки перед отправкой формы
-   * @param {object} event
    */
-  form.addEventListener('submit', function(event) {
+  form.addEventListener('submit', function() {
     browserCookies.set('reviewName', reviewName.value, ' ', {expires: getDateToExpire()});
     console.log(reviewName, ' ', reviewName.value, {expires: getDateToExpire()});
 
