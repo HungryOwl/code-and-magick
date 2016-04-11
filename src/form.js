@@ -169,7 +169,7 @@
     }
 
     daysFromMyBirthday = Math.floor((today - birthday) / MS_IN_DAY) * MS_IN_DAY;
-    return today.valueOf() + daysFromMyBirthday;
+    return Math.ceil((today.valueOf() + daysFromMyBirthday) / MS_IN_DAY);
   }
 
   /**
@@ -178,7 +178,7 @@
   form.addEventListener('submit', function() {
     var cookieOptExpires = {expires: getDateToExpire()};
 
-    browserCookies.set(COOKIE_REVIEW_NAME, reviewName.value, {expires: cookieOptExpires});
-    browserCookies.set(COOKIE_REVIEW_MARK, reviewMarkCollection.value, {expires: cookieOptExpires});
+    browserCookies.set(COOKIE_REVIEW_NAME, reviewName.value, cookieOptExpires);
+    browserCookies.set(COOKIE_REVIEW_MARK, reviewMarkCollection.value, cookieOptExpires);
   });
 })();
