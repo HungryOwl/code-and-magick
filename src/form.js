@@ -93,7 +93,8 @@
     reviewSubmit.disabled = !isFormCorrect;
   }
 
-  reviewName.value = browserCookies.get('reviewName') || '';
+  reviewName.value = browserCookies.get('reviewName') || reviewName.value;
+  reviewMarkCollection.value = browserCookies.get('reviewMarkCollection') || reviewMarkCollection.value;
   validateForm();
 
   /**
@@ -103,14 +104,8 @@
     /**
      * Обращение к элементу коллекции по индексу
      */
-
-    if (reviewMarkCollection[i].value === browserCookies.get('reviewCookieMark')) {
-      console.log(reviewMarkCollection[i]);
-      reviewMarkCollection[i].checked = true;
-    }
     reviewMarkCollection[i].addEventListener('change', validateForm);
   }
-
 
   /**
    * При изменении каждого элемента проверяем всю форму, см. validateForm
@@ -141,7 +136,7 @@
 
     /**
      * Вычисляем текущий год
-     * @type {Date}
+     * @type {number}
      */
     var currentYear = today.getFullYear();
 
@@ -149,7 +144,7 @@
      * Устанавливаем текущий год у дня рождения
      * @type {Date}
      */
-    var birthday = new Date(currentYear, 12, 8);
+    var birthday = new Date(currentYear, 11, 8);
 
     /**
      * Количество дней, прошедших со дня моего рождения
@@ -158,43 +153,29 @@
     var daysFromMyBirthday;
 
     /**
-     * Число для округления милисекунд до дней и обратно
+     * Число милисекунд в дне
      * @const
      * @type {number}
      */
     var MS_IN_DAY = 1000 * 60 * 60 * 24;
 
     if (today.valueOf() < birthday.valueOf()) {
-      birthday.setFullYear(today.getFullYear() - 1);
+      birthday.setFullYear(currentYear - 1);
     }
 
-    daysFromMyBirthday = Math.floor((today.valueOf() - birthday.valueOf()) / MS_IN_DAY) * MS_IN_DAY;
-
+    daysFromMyBirthday = Math.floor((today - birthday) / MS_IN_DAY) * MS_IN_DAY;
     return Math.floor(today.valueOf() / MS_IN_DAY) * MS_IN_DAY + daysFromMyBirthday;
   }
 
   /**
    * Записываем Куки перед отправкой формы
-   * @param {submit} event
+   * @param {object} event
    */
   form.addEventListener('submit', function(event) {
-    /**
-     * Выбранная пользователем радиокнопка
-     */
-    var reviewCookieMark;
-    event.preventDefault();
-
-    browserCookies.set('reviewName', reviewName.value);
+    browserCookies.set('reviewName', reviewName.value, ' ', {expires: getDateToExpire()});
     console.log(reviewName, ' ', reviewName.value, {expires: getDateToExpire()});
 
-    for (i = 0; i < reviewMarkCollection.length; i++) {
-      if (reviewMarkCollection[i].checked) {
-        reviewCookieMark = reviewMarkCollection[i];
-        console.log(reviewMarkCollection[i], ' ', reviewMarkCollection[i].value);
-        browserCookies.set('reviewCookieMark', reviewCookieMark.value, {expires: getDateToExpire()});
-      }
-    }
-
-    this.submit();
+    browserCookies.set('reviewMarkCollection', reviewMarkCollection.value, {expires: getDateToExpire()});
+    console.log(reviewMarkCollection, ' ', reviewMarkCollection.value, ' ', {expires: getDateToExpire()});
   });
 })();
