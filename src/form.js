@@ -63,7 +63,7 @@
    */
 
   var COOKIE_REVIEW_NAME = 'review-name';
-  var COOKIE_REVIEW_MARK = 'reviewMarkCollection';
+  var COOKIE_REVIEW_MARK = 'review-mark';
 
   function isInputCorrect(element) {
     return !element.required || Boolean(element.value.trim());
@@ -129,7 +129,7 @@
   };
 
   /**
-   * Вычисляем количество милисекунд, прошедших со дня моего рождения до текущей даты
+   * Вычисляем количество дней, прошедших со дня моего рождения до текущей даты
    * @return {number}
    */
   function getDateToExpire() {
@@ -152,12 +152,6 @@
     var birthday = new Date(currentYear, 11, 8);
 
     /**
-     * Количество дней, прошедших со дня моего рождения
-     * @type {number}
-     */
-    var daysFromMyBirthday;
-
-    /**
      * Число милисекунд в дне
      * @const
      * @type {number}
@@ -168,8 +162,7 @@
       birthday.setFullYear(currentYear - 1);
     }
 
-    daysFromMyBirthday = Math.floor((today - birthday) / MS_IN_DAY) * MS_IN_DAY;
-    return Math.ceil((today.valueOf() + daysFromMyBirthday) / MS_IN_DAY);
+    return Math.floor((today - birthday) / MS_IN_DAY);
   }
 
   /**
