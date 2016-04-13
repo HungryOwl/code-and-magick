@@ -25,22 +25,13 @@
   var elementToClone;
 
   /**
-   * Клонируем или с content или сам  template
+   * Коллбэк, отрабатывающий при загрузке/ошибке загрузки/таймауте загрузки картинки
+   * @callback LoadImageCallback
+   * @param {boolean}
    */
-  if('content' in templateElement) {
-    elementToClone = templateElement.content.querySelector('.review');
-  } else {
-    elementToClone = templateElement.querySelector('.review');
-  }
-
- /**
-  * Коллбэк, отрабатывающий при загрузке/ошибке загрузки/таймауте загрузки картинки
-  * @callback LoadImageCallback
-  * @param {boolean}
-  */
 
   /**
-   * Загружаем картинку и отрабатываем все состяния с помощью коллбэка
+   * Создаем картинку через конструктор, загружаем ее и отрабатываем все состяния с помощью коллбэка
    * @param {string} url
    * @param {LoadImageCallback} callback
    */
@@ -67,7 +58,7 @@
   }
 
   /**
-   * Загружаем картинку, отрабатываем состояние загрузки, ошибки, таймаута
+   * Ищем img в слконированном элементе, отрабатываем для него состояние загрузки, ошибки, таймаута
    * @param  {Object} data
    * @param  {HTMLElement} review
    * @return {HTMLElement} review
@@ -132,6 +123,15 @@
    * Прячем список фильтров перед отрисовкой отзывов
    */
   reviewsFilterBlock.classList.add('invisible');
+
+  /**
+   * Клонируем или с content или сам template
+   */
+  if('content' in templateElement) {
+    elementToClone = templateElement.content.querySelector('.review');
+  } else {
+    elementToClone = templateElement.querySelector('.review');
+  }
 
   /**
    * Проходимся по всему массиву и для каждого объекта генерируем новый DOM-элемент
