@@ -24,6 +24,9 @@
    */
   var elementToClone;
 
+  /**
+   * Клонируем или с content или сам  template
+   */
   if('content' in templateElement) {
     elementToClone = templateElement.content.querySelector('.review');
   } else {
@@ -31,10 +34,10 @@
   }
 
   /**
-   * Прячем список фильтров перед отрисовкой отзывов
+   * Загружаем картинку и отрабатываем все состяния с помощью коллбэка
+   * @param  {string}   url
+   * @param  {LoadImageCallback} callback
    */
-  reviewsFilterBlock.classList.add('invisible');
-
   function loadImg(url, callback) {
     var img = new Image();
     var imgTimeout;
@@ -60,15 +63,20 @@
   /**
    * Загружаем картинку, отрабатываем состояние загрузки, ошибки, таймаута
    * @param  {Object} data
-   * @param  {HTMLElement} clonedElement
-   * @return {HTMLElement} clonedElement
+   * @param  {HTMLElement} review
+   * @return {HTMLElement} review
    */
-  var getReviewImg = function(data, review) {
+  function getReviewImg(data, review) {
     var elementImg = review.querySelector('.review-author');
     var IMAGE_SIZE = 124;
 
     elementImg.alt = data.author.name;
 
+    /**
+     * Добавляем класс, если картинка не загрузилась
+     * Передаем URL и задаем размеры в случае ее загрузки
+     * @param {boolean}
+     */
     function onImageLoad(error) {
       if (error) {
         review.classList.add('review-load-failure');
@@ -82,7 +90,7 @@
     loadImg(data.author.picture, onImageLoad);
 
     return review;
-  };
+  }
 
   /**
    * Генерируем новый DOM-элемент
@@ -90,7 +98,7 @@
    * @param  {HTMLElement} container - контейнер, внутри которого рисуем DOM-элемент
    * @return {HTMLElement} новый отрисованный DOM-элемент
    */
-  var getReviewElement = function(data, container) {
+  function getReviewElement(data, container) {
     var element = elementToClone.cloneNode(true);
     var elementRating = element.querySelector('.review-rating');
     var rating;
@@ -112,7 +120,12 @@
     container.appendChild(element);
 
     return element;
-  };
+  }
+
+  /**
+   * Прячем список фильтров перед отрисовкой отзывов
+   */
+  reviewsFilterBlock.classList.add('invisible');
 
   /**
    * Проходимся по всему массиву и для каждого объекта генерируем новый DOM-элемент
