@@ -33,10 +33,16 @@
     elementToClone = templateElement.querySelector('.review');
   }
 
+ /**
+  * Коллбэк, отрабатывающий при загрузке/ошибке загрузки/таймауте загрузки картинки
+  * @callback LoadImageCallback
+  * @param {boolean}
+  */
+
   /**
    * Загружаем картинку и отрабатываем все состяния с помощью коллбэка
-   * @param  {string}   url
-   * @param  {LoadImageCallback} callback
+   * @param {string} url
+   * @param {LoadImageCallback} callback
    */
   function loadImg(url, callback) {
     var img = new Image();
@@ -75,7 +81,7 @@
     /**
      * Добавляем класс, если картинка не загрузилась
      * Передаем URL и задаем размеры в случае ее загрузки
-     * @param {boolean}
+     * @param {boolean} error
      */
     function onImageLoad(error) {
       if (error) {
