@@ -27,7 +27,7 @@
   /**
    * Коллбэк, отрабатывающий при загрузке/ошибке загрузки/таймауте загрузки картинки
    * @callback LoadImageCallback
-   * @param {boolean}
+   * @param {boolean} error - true при ошибке и таймауте, false при успешной загрузке, см. функцию onImageLoad
    */
 
   /**
