@@ -8,7 +8,7 @@
   var reviewsFilterBlock = document.querySelector('.reviews-filter');
 
   /**
-   * Блок, в который помещаются отзывы
+   * Блок, в который помещаются отзывы и выступающий в роли прелоадера
    * @type {HTMLElement}
    */
   var reviewsContainer = document.querySelector('.reviews-list');
@@ -23,6 +23,36 @@
    * Клонируемое содержимое из template
    */
   var elementToClone;
+
+  /**
+   * Грузим отсюда список отелей по XMLHttpRequest
+   * @type {String}
+   */
+  var REVIEWS_LOAD_URL = '//o0.github.io/assets/json/reviews.json';
+
+  /**
+   * Переменная, в которую кладем наш массив, полученный по xhr
+   * @type {Array.<Object>}
+   */
+  var reviews = [];
+
+  /**
+   * Список for у меток, по которым фильтруем
+   * @type {Object}
+   */
+  var Filter = {
+    'All': 'reviews-all',
+    'DATA': 'reviews-recent',
+    'RATING_GOOD': 'reviews-good',
+    'RATING_BAD': 'reviews-bad',
+    'POPULAR': 'reviews-popular'
+  };
+
+  /**
+   * Дефолтный фильтр
+   * @type {String}
+   */
+  var DEFAULT_FILTER = Filter.ALL;
 
   /**
    * Коллбэк, отрабатывающий при загрузке/ошибке загрузки/таймауте загрузки картинки
@@ -120,9 +150,141 @@
   }
 
   /**
-   * Прячем список фильтров перед отрисовкой отзывов
+   * Отрабатываем состояния загрузки и ошибки
+   * @callback LoadXhrCallback
+   * @param {Boolean} error - Если скрипт не загрузился, error = true, при успехе error = false
+   * @param {Array<Object>} - В случае успешной загрузки обрабатываем наш массив объектов
    */
-  reviewsFilterBlock.classList.add('invisible');
+
+  /**
+   * Грузим наш xhr с сервера и получаем список отзывов с сервера по ссылке
+   * @param  {String}           url       Ссылка, по которой грузим нужный скрипт
+   * @param  {LoadXhrCallback}  callback  Коллбэк, отрабатывающий возможные события загрузки скрипта
+   */
+  function callServer(url, callback) {
+    var xhr = new XMLHttpRequest();
+
+    xhr.addEventListener('load', function(event) {
+      callback(false, JSON.parse(event.target.response));
+    });
+
+    xhr.addEventListener('error', function() {
+      callback(true);
+    });
+
+    xhr.addEventListener('timeout', function() {
+      callback(true);
+    });
+
+    xhr.open('GET', url);
+
+    xhr.timeout = 10000;
+    xhr.send();
+  }
+
+  /**
+   * Отрисовываем отзывы, отчищая перед этим контейнер
+   * @param  {Array.<Object>} reviews - наш массив со списком отелей
+   */
+  function renderReviews(someReviews) {
+    reviewsContainer.innerHTML = '';
+
+    /**
+     * Проходимся по всему массиву и для каждого объекта генерируем новый DOM-элемент
+     * см. getReviewElement
+     */
+    someReviews.forEach(function(review) {
+      getReviewElement(review, reviewsContainer);
+    });
+  }
+
+  /**
+   * Перефигачиваем данные под фильтры в исходном массиве
+   * @param  {Array<Object>} reviews исходный массив
+   * @param  {string} filter наш фильтр по атрибуту for, см. setFiltrationEnabled(this.for)
+   */
+  function getFilteredReviews(someReviews, filter) {
+    /**
+     * Дата последнего отзыва
+     */
+    var lastReviewDate;
+    var reviewsToFilter = someReviews.slice(0);
+
+    switch(filter) {
+      case Filter.DATA:
+        reviewsToFilter.sort(function(a, b) {
+          return new Date(b.date) - new Date(a.date);
+        });
+
+        lastReviewDate = new Date(reviewsToFilter[0].date);
+
+        /**
+         * За две недели до последнего отзыва
+         */
+        lastReviewDate.setDate(lastReviewDate.getDate() - 14);
+
+        reviewsToFilter = reviewsToFilter.filter(function(review) {
+          return new Date(review.date) >= lastReviewDate;
+        });
+        break;
+
+      case Filter.RATING_GOOD:
+        reviewsToFilter = reviewsToFilter
+          .filter(function(review) {
+            return review.rating >= 3;
+          })
+          .sort(function(a, b) {
+            return b.rating - a.rating;
+          });
+        break;
+
+      case Filter.RATING_BAD:
+        reviewsToFilter = reviewsToFilter
+          .filter(function(review) {
+            return review.rating < 3;
+          })
+          .sort(function(a, b) {
+            return a.rating - b.rating;
+          });
+        break;
+
+      case Filter.POPULAR:
+        reviewsToFilter.sort(function(a, b) {
+          return b.review_usefulness - a.review_usefulness;
+        });
+        break;
+    }
+    return reviewsToFilter;
+  }
+
+  /**
+   * Настраиваем фильтры по атрибуту for у метки
+   * И перерисовываем отзывы на основе нового массива
+   * @param {string} filter атрибут for у метки, см. setFiltrationEnabled(this.for)
+   */
+  function setFilterEnabled(filter) {
+    var filteredReviews = getFilteredReviews(reviews, filter);
+    renderReviews(filteredReviews);
+  }
+
+  /**
+   * Ищем все наши метки и вешаем на них фильтры по событию click
+   */
+  function setFiltersEnabled() {
+    var i;
+    var reviewFilters = document.querySelectorAll('.reviews-filter-item');
+    for (i = 0; i < reviewFilters.length; i++) {
+      reviewFilters[i].addEventListener('click', function() {
+        setFilterEnabled(this.getAttribute('for'));
+      });
+    }
+  }
+
+  /**
+   * Ищем прелоадер, вешаем на него нужный класс
+   * @type {HTMLElement}
+   */
+  reviewsContainer.classList.add('reviews-list-loading');
 
   /**
    * Клонируем или с content или сам template
@@ -134,16 +296,25 @@
   }
 
   /**
-   * Проходимся по всему массиву и для каждого объекта генерируем новый DOM-элемент
-   * см. getReviewElement
+   * Прячем список фильтров перед отрисовкой отзывов
    */
-  window.reviews.forEach(function(review) {
-    getReviewElement(review, reviewsContainer);
+  reviewsFilterBlock.classList.add('invisible');
+
+  callServer(REVIEWS_LOAD_URL, function(error, reviewsData) {
+    reviewsContainer.classList.remove('reviews-list-loading');
+
+    if (error) {
+      reviewsContainer.classList.add('reviews-load-failure');
+    } else {
+      reviews = reviewsData;
+
+      /**
+       * Возвращаем фильтры
+       */
+      reviewsFilterBlock.classList.remove('invisible');
+
+      setFiltersEnabled(true);
+      setFilterEnabled(DEFAULT_FILTER);
+    }
   });
-
-  /**
-   * Возвращаем фильтры
-   */
-  reviewsFilterBlock.classList.remove('invisible');
 })();
-
