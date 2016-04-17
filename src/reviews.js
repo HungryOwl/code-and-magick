@@ -37,6 +37,12 @@
   var reviews = [];
 
   /**
+   * Отфильтрованный массив
+   * @type {Array.<Object>}
+   */
+  var filteredReviews = [];
+
+  /**
    * Список for у меток, по которым фильтруем
    * @type {Object}
    */
@@ -53,6 +59,24 @@
    * @type {String}
    */
   var DEFAULT_FILTER = Filter.ALL;
+
+  /**
+   * Количество отрисованных отзывов
+   * @const {Number}
+   */
+  var PAGE_SIZE = 3;
+
+  /**
+   * Номер страницы отзывов, которую сейчас рисуем
+   * @type {Number}
+   */
+  var pageNumber = 0;
+
+  /**
+   * Кнопка показа отзывов
+   * @type {HTMLElement}
+   */
+  var showMoreButton = document.querySelector('.reviews-controls-more');
 
   /**
    * Коллбэк, отрабатывающий при загрузке/ошибке загрузки/таймауте загрузки картинки
@@ -186,8 +210,10 @@
    * Отрисовываем отзывы, отчищая перед этим контейнер
    * @param  {Array.<Object>} reviews - наш массив со списком отелей
    */
-  function renderReviews(someReviews) {
-    reviewsContainer.innerHTML = '';
+  function renderReviews(someReviews, replace) {
+    if (replace) {
+      reviewsContainer.innerHTML = '';
+    }
 
     /**
      * Проходимся по всему массиву и для каждого объекта генерируем новый DOM-элемент
@@ -199,7 +225,7 @@
   }
 
   /**
-   * Перефигачиваем данные под фильтры в исходном массиве
+   * Сортируем данные под фильтры в исходном массиве
    * @param  {Array<Object>} reviews исходный массив
    * @param  {string} filter наш фильтр по атрибуту for, см. setFiltrationEnabled(this.for)
    */
@@ -258,26 +284,51 @@
   }
 
   /**
+   * Отрисовка отзывов постранично
+   */
+  function loadNextReviewsPage() {
+    var from = pageNumber * PAGE_SIZE;
+    var to = from + PAGE_SIZE;
+
+    if (from < filteredReviews.length) {
+      renderReviews(filteredReviews.slice(from, to), pageNumber === 0);
+
+      pageNumber++;
+
+      showMoreButton.classList.toggle('invisible', to >= filteredReviews.length);
+    }
+  }
+
+  /**
+   * Отрисовываем наши страницы по клику на кнопку "показать отзывы"
+   */
+  function enableMoreButton() {
+    showMoreButton.addEventListener('click', loadNextReviewsPage);
+  }
+
+  /**
    * Настраиваем фильтры по атрибуту for у метки
-   * И перерисовываем отзывы на основе нового массива
+   * Перерисовываем отзывы на основе нового массива
+   * И проверяем, досупна ли кнопка загрузки отзывов
    * @param {string} filter атрибут for у метки, см. setFiltrationEnabled(this.for)
    */
-  function setFilterEnabled(filter) {
-    var filteredReviews = getFilteredReviews(reviews, filter);
-    renderReviews(filteredReviews);
+  function setFilter(filter) {
+    pageNumber = 0;
+
+    filteredReviews = getFilteredReviews(reviews, filter);
+
+    loadNextReviewsPage();
   }
 
   /**
    * Ищем все наши метки и вешаем на них фильтры по событию click
    */
-  function setFiltersEnabled() {
-    var i;
-    var reviewFilters = document.querySelectorAll('.reviews-filter-item');
-    for (i = 0; i < reviewFilters.length; i++) {
-      reviewFilters[i].addEventListener('click', function() {
-        setFilterEnabled(this.getAttribute('for'));
-      });
-    }
+  function enableFilters() {
+    reviewsFilterBlock.addEventListener('click', function(evt) {
+      if (evt.target.classList.contains('reviews-filter-item')) {
+        setFilter(evt.target.getAttribute('for'));
+      }
+    });
   }
 
   /**
@@ -313,8 +364,9 @@
        */
       reviewsFilterBlock.classList.remove('invisible');
 
-      setFiltersEnabled(true);
-      setFilterEnabled(DEFAULT_FILTER);
+      enableFilters(true);
+      setFilter(DEFAULT_FILTER);
+      enableMoreButton();
     }
   });
 })();
