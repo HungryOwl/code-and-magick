@@ -364,7 +364,7 @@
        */
       reviewsFilterBlock.classList.remove('invisible');
 
-      enableFilters(true);
+      enableFilters();
       setFilter(DEFAULT_FILTER);
       enableMoreButton();
     }

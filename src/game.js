@@ -729,10 +729,66 @@
     }
   };
 
+  /**
+   * Параллакс для облаков
+   */
+  function initClouds() {
+    var controlDate = new Date();
+    var clouds = document.querySelector('.header-clouds');
+    var cloudsComputedStyle = getComputedStyle(clouds);
+    var CurrentXcoordinate = parseInt(cloudsComputedStyle.backgroundPositionX, 10);
+    var demo = document.querySelector('.demo');
+
+    /**
+     * Двигаем облака
+     */
+    function moveClouds() {
+      var cloudsCurrentPosition = clouds.getBoundingClientRect();
+      var step = cloudsCurrentPosition.top / 3;
+      clouds.style.backgroundPositionX = CurrentXcoordinate + step + '%';
+    }
+
+    window.addEventListener('scroll', moveClouds);
+
+    /**
+     * Прекращаем движение облаков
+     */
+    function stopMoving() {
+      var cloudsCurrentPosition = clouds.getBoundingClientRect();
+      if (cloudsCurrentPosition.bottom < 0) {
+        window.removeEventListener('scroll', moveClouds);
+      } else {
+        window.addEventListener('scroll', moveClouds);
+      }
+    }
+
+    /**
+     * Ставим игру на паузу
+     */
+    function gamePause() {
+      var demoCurrentPosition = demo.getBoundingClientRect();
+      if (demoCurrentPosition.bottom < 0) {
+        game.setGameStatus(Game.Verdict.PAUSE);
+      }
+    }
+
+    window.addEventListener('scroll', function() {
+      var currentDate = new Date();
+      var MS = 100;
+      if(currentDate.valueOf() - controlDate.valueOf() >= MS) {
+        stopMoving();
+        gamePause();
+        controlDate = new Date();
+      }
+    });
+  }
+
   window.Game = Game;
   window.Game.Verdict = Verdict;
 
   var game = new Game(document.querySelector('.demo'));
   game.initializeLevelAndStart();
   game.setGameStatus(window.Game.Verdict.INTRO);
+
+  initClouds();
 })();
