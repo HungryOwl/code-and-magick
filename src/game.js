@@ -1,6 +1,6 @@
 'use strict';
 
-(function() {
+define('game', ['./utils', './parallax-clouds'], function(utils, parallaxClouds) {
   /**
    * @const
    * @type {number}
@@ -730,65 +730,31 @@
   };
 
   /**
-   * Параллакс для облаков
+   * Ставим игру на паузу
    */
-  function initClouds() {
-    var controlDate = new Date();
-    var clouds = document.querySelector('.header-clouds');
-    var cloudsComputedStyle = getComputedStyle(clouds);
-    var CurrentXcoordinate = parseInt(cloudsComputedStyle.backgroundPositionX, 10);
-    var demo = document.querySelector('.demo');
-
-    /**
-     * Двигаем облака
-     */
-    function moveClouds() {
-      var cloudsCurrentPosition = clouds.getBoundingClientRect();
-      var step = cloudsCurrentPosition.top / 3;
-      clouds.style.backgroundPositionX = CurrentXcoordinate + step + '%';
+  function gamePause() {
+    var demoCurrentPosition = demo.getBoundingClientRect();
+    if (demoCurrentPosition.bottom < 0) {
+      game.setGameStatus(Game.Verdict.PAUSE);
     }
-
-    window.addEventListener('scroll', moveClouds);
-
-    /**
-     * Прекращаем движение облаков
-     */
-    function stopMoving() {
-      var cloudsCurrentPosition = clouds.getBoundingClientRect();
-      if (cloudsCurrentPosition.bottom < 0) {
-        window.removeEventListener('scroll', moveClouds);
-      } else {
-        window.addEventListener('scroll', moveClouds);
-      }
-    }
-
-    /**
-     * Ставим игру на паузу
-     */
-    function gamePause() {
-      var demoCurrentPosition = demo.getBoundingClientRect();
-      if (demoCurrentPosition.bottom < 0) {
-        game.setGameStatus(Game.Verdict.PAUSE);
-      }
-    }
-
-    window.addEventListener('scroll', function() {
-      var currentDate = new Date();
-      var MS = 100;
-      if(currentDate.valueOf() - controlDate.valueOf() >= MS) {
-        stopMoving();
-        gamePause();
-        controlDate = new Date();
-      }
-    });
   }
+
+  /**
+   * Что вызываем при троттлинге
+   */
+  function whatDoWeThrottle() {
+    parallaxClouds.stopMoving();
+    gamePause();
+  }
+
+  window.addEventListener('scroll', utils.throttle(whatDoWeThrottle, 100));
 
   window.Game = Game;
   window.Game.Verdict = Verdict;
 
-  var game = new Game(document.querySelector('.demo'));
+  var demo = document.querySelector('.demo');
+  var game = new Game(demo);
+
   game.initializeLevelAndStart();
   game.setGameStatus(window.Game.Verdict.INTRO);
-
-  initClouds();
-})();
+});

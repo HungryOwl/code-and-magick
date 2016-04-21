@@ -1,6 +1,6 @@
 'use strict';
 
-(function() {
+define('reviews', ['./utils'], function(utils) {
 /**
  * Список фильтров
  * @type {HTMLElement}
@@ -14,15 +14,9 @@
   var reviewsContainer = document.querySelector('.reviews-list');
 
   /**
-   * Наш шаблончик с разметкой
-   * @type {HTMLElement}
-   */
-  var templateElement = document.querySelector('#review-template');
-
-  /**
    * Клонируемое содержимое из template
    */
-  var elementToClone;
+  var elementToClone = utils.getTemplateClone('#review-template', '.review');
 
   /**
    * Грузим отсюда список отелей по XMLHttpRequest
@@ -79,39 +73,6 @@
   var showMoreButton = document.querySelector('.reviews-controls-more');
 
   /**
-   * Коллбэк, отрабатывающий при загрузке/ошибке загрузки/таймауте загрузки картинки
-   * @callback LoadImageCallback
-   * @param {boolean} error - true при ошибке и таймауте, false при успешной загрузке, см. функцию onImageLoad
-   */
-
-  /**
-   * Создаем картинку через конструктор, загружаем ее и отрабатываем все состяния с помощью коллбэка
-   * @param {string} url
-   * @param {LoadImageCallback} callback
-   */
-  function loadImg(url, callback) {
-    var img = new Image();
-    var imgTimeout;
-    var IMAGE_TIMEOUT = 10000;
-
-    img.addEventListener('load', function() {
-      clearTimeout(imgTimeout);
-      callback(false);
-    });
-
-    img.addEventListener('error', function() {
-      clearTimeout(imgTimeout);
-      callback(true);
-    });
-
-    imgTimeout = setTimeout(function() {
-      callback(true);
-    }, IMAGE_TIMEOUT);
-
-    img.src = url;
-  }
-
-  /**
    * Ищем img в слконированном элементе, отрабатываем для него состояние загрузки, ошибки, таймаута
    * @param  {Object} data
    * @param  {HTMLElement} review
@@ -138,7 +99,7 @@
       }
     }
 
-    loadImg(data.author.picture, onImageLoad);
+    utils.loadImg(data.author.picture, onImageLoad);
 
     return review;
   }
@@ -171,39 +132,6 @@
     container.appendChild(element);
 
     return element;
-  }
-
-  /**
-   * Отрабатываем состояния загрузки и ошибки
-   * @callback LoadXhrCallback
-   * @param {Boolean} error - Если скрипт не загрузился, error = true, при успехе error = false
-   * @param {Array<Object>} - В случае успешной загрузки обрабатываем наш массив объектов
-   */
-
-  /**
-   * Грузим наш xhr с сервера и получаем список отзывов с сервера по ссылке
-   * @param  {String}           url       Ссылка, по которой грузим нужный скрипт
-   * @param  {LoadXhrCallback}  callback  Коллбэк, отрабатывающий возможные события загрузки скрипта
-   */
-  function callServer(url, callback) {
-    var xhr = new XMLHttpRequest();
-
-    xhr.addEventListener('load', function(event) {
-      callback(false, JSON.parse(event.target.response));
-    });
-
-    xhr.addEventListener('error', function() {
-      callback(true);
-    });
-
-    xhr.addEventListener('timeout', function() {
-      callback(true);
-    });
-
-    xhr.open('GET', url);
-
-    xhr.timeout = 10000;
-    xhr.send();
   }
 
   /**
@@ -338,20 +266,11 @@
   reviewsContainer.classList.add('reviews-list-loading');
 
   /**
-   * Клонируем или с content или сам template
-   */
-  if('content' in templateElement) {
-    elementToClone = templateElement.content.querySelector('.review');
-  } else {
-    elementToClone = templateElement.querySelector('.review');
-  }
-
-  /**
    * Прячем список фильтров перед отрисовкой отзывов
    */
   reviewsFilterBlock.classList.add('invisible');
 
-  callServer(REVIEWS_LOAD_URL, function(error, reviewsData) {
+  utils.callServer(REVIEWS_LOAD_URL, function(error, reviewsData) {
     reviewsContainer.classList.remove('reviews-list-loading');
 
     if (error) {
@@ -369,4 +288,4 @@
       enableMoreButton();
     }
   });
-})();
+});

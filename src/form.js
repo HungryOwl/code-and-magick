@@ -2,8 +2,7 @@
 /**
  * Валидируем форму
  */
-(function() {
-  var browserCookies = require('browser-cookies');
+define('form', ['./utils', 'browser-cookies'], function(utils, browserCookies) {
   var i;
   var formContainer = document.querySelector('.overlay-container');
   var formOpenButton = document.querySelector('.reviews-controls-new');
@@ -90,9 +89,9 @@
      * С помощью метода trim подчищаем строку от лишних пробелов в начале и в конце
      * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/trim
      */
-    reviewTextLabel.classList.toggle('invisible', isTextCorrect);
-    reviewNameLabel.classList.toggle('invisible', isNameCorrect);
-    reviewField.classList.toggle('invisible', isFormCorrect);
+    utils.setBlockHidden(reviewTextLabel, isTextCorrect);
+    utils.setBlockHidden(reviewNameLabel, isNameCorrect);
+    utils.setBlockHidden(reviewField, isFormCorrect);
 
     reviewSubmit.disabled = !isFormCorrect;
   }
@@ -120,12 +119,14 @@
 
   formOpenButton.onclick = function(evt) {
     evt.preventDefault();
-    formContainer.classList.remove('invisible');
+
+    utils.setBlockHidden(formContainer, false);
   };
 
   formCloseButton.onclick = function(evt) {
     evt.preventDefault();
-    formContainer.classList.add('invisible');
+
+    utils.setBlockHidden(formContainer, true);
   };
 
   /**
@@ -174,4 +175,4 @@
     browserCookies.set(COOKIE_REVIEW_NAME, reviewName.value, cookieOptExpires);
     browserCookies.set(COOKIE_REVIEW_MARK, reviewMarkCollection.value, cookieOptExpires);
   });
-})();
+});
