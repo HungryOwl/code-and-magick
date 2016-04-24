@@ -104,11 +104,14 @@ define('utils', function() {
 
   /**
    * Троттлим что-то
-   * @param  {date}   controlDate контрольная дата, с которой начинается троттлинг
    * @param  {callback} callback    функция, которая будет троттлиться
    * @param  {number}   time        время троттлинга
    */
   function throttle(callback, time) {
+    /**
+     * controlDate контрольная дата, с которой начинается троттлинг
+     * @type {Date}
+     */
     var controlDate = new Date();
 
     return function() {
@@ -122,12 +125,31 @@ define('utils', function() {
   }
 
   /**
-   * Делаем блок невидимвм
+   * Делаем блок невидимым
    * @param  {HTMLElement} blockToToggle  куда навешиваем класс
    * @param  {boolean}     whenToToggle   условие, по которому тогглим
    */
   function setBlockHidden(blockToToggle, whenToToggle) {
     blockToToggle.classList.toggle('invisible', whenToToggle);
+  }
+
+  /**
+   * Переключаем наши картинки
+   * @callback SwitchPicture
+   */
+
+  /**
+   * Возвращаем функцию!! (подумай, почему, см. gallery)
+   * @param  {number}   keyCode   код клавиши
+   * @param  {SwitchPicture} callback  вызывем коллбэк по нажатию
+   * @return {function}           проверяем, та ли нажата клавиша
+   */
+  function listenKey(keyCode, callback) {
+    return function(evt) {
+      if (evt.keyCode === keyCode) {
+        callback();
+      }
+    };
   }
 
   /**
@@ -138,6 +160,7 @@ define('utils', function() {
     callServer: callServer,
     getTemplateClone: getTemplateClone,
     throttle: throttle,
-    setBlockHidden: setBlockHidden
+    setBlockHidden: setBlockHidden,
+    listenKey: listenKey
   };
 });
