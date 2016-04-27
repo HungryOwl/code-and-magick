@@ -3,8 +3,7 @@
 define('review', ['./template'], function(getReviewElement) {
   /**
    * Конструктор отзыва
-   * @param {object}       data       Данные, полученные по xhr
-   * @param {HTMLElement}  container  DOM-нода, в которую кладется отзыв
+   * @param {object} data Данные, полученные по xhr
    * @constructor
    */
   function Review(data) {
