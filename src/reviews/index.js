@@ -56,6 +56,12 @@ define('reviews', ['../utils', './review'], function(utils, Review) {
   var DEFAULT_FILTER = Filter.ALL;
 
   /**
+   * Имя фильтра в локалсторедже
+   * @type {String}
+   */
+  var filterStorageKey = 'filter';
+
+  /**
    * Количество отрисованных отзывов
    * @const {Number}
    */
@@ -188,6 +194,7 @@ define('reviews', ['../utils', './review'], function(utils, Review) {
    * @param {string} filter атрибут for у метки, см. setFiltrationEnabled(this.for)
    */
   function setFilter(filter) {
+    localStorage.setItem(filterStorageKey, filter);
     pageNumber = 0;
 
     filteredReviews = getFilteredReviews(reviews, filter);
@@ -218,6 +225,13 @@ define('reviews', ['../utils', './review'], function(utils, Review) {
   reviewsFilterBlock.classList.add('invisible');
 
   utils.callServer(REVIEWS_LOAD_URL, function(error, reviewsData) {
+    /**
+     * Кнопка фильтра отзывов
+     * @type {HTMLInputElement} инпут с id фильтра
+     */
+    var filterButton;
+    var savedFilter = localStorage.getItem(filterStorageKey);
+
     reviewsContainer.classList.remove('reviews-list-loading');
 
     if (error) {
@@ -231,7 +245,15 @@ define('reviews', ['../utils', './review'], function(utils, Review) {
       reviewsFilterBlock.classList.remove('invisible');
 
       enableFilters();
-      setFilter(DEFAULT_FILTER);
+
+      setFilter(savedFilter || DEFAULT_FILTER);
+
+      filterButton = reviewsFilterBlock.querySelector('#' + savedFilter);
+
+      if (filterButton) {
+        filterButton.checked = true;
+      }
+
       enableMoreButton();
     }
   });
