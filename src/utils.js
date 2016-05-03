@@ -147,7 +147,7 @@ define('utils', function() {
   function listenKey(keyCode, callback) {
     return function(evt) {
       if (evt.keyCode === keyCode) {
-        callback();
+        callback.call(this);
       }
     };
   }
