@@ -397,18 +397,43 @@ define('game', ['./utils', './parallax-clouds'], function(utils, parallaxClouds)
     },
 
     /**
+     * Разбиваем строку на массив с подстроками
+     * @param  {String} line       Исходная строка
+     * @param  {Number} lineLength Длина строки в символах
+     * @return {String[]}          Массив строк нужной длины
+     */
+    _breakToLines: function(line, lineLength) {
+      var wordsArray = line.split(' ');
+      var lineArray = [];
+      var i = 0;
+      lineArray[i] = wordsArray.shift();
+
+      wordsArray.forEach(function(word) {
+        if((lineArray[i] + word).length < lineLength) {
+          lineArray[i] = lineArray[i] + ' ' + word;
+        } else {
+          lineArray[++i] = word;
+        }
+      });
+
+      return lineArray;
+    },
+
+    /**
      * Наш прямоугольничек с текстом
-     * @param {String[]} sentence
+     * @param {String} sentence
      */
     _drawTextRectangle: function(sentence) {
       var startX = 400;
       var startY = 100;
       var shadowXY = 10;
+      var LINE_LENGTH = 8;
       var balloonWidth = 150;
+      var lines = this._breakToLines(sentence, LINE_LENGTH);
       var PADDING_LEFT = 20;
       var PADDING_TOP = 10;
       var LINE_HEIGHT = 20;
-      var balloonHeight = (2 * PADDING_TOP) + (sentence.length * LINE_HEIGHT);
+      var balloonHeight = (2 * PADDING_TOP) + (lines.length * LINE_HEIGHT);
       var BOX_COLOR = '#ffffff';
       var TEXT_COLOR = 'black';
       var SHADOW_COLOR = 'rgba(0, 0, 0, 0.7)';
@@ -420,7 +445,7 @@ define('game', ['./utils', './parallax-clouds'], function(utils, parallaxClouds)
       this.ctx.font = '16px PT Mono';
       this.ctx.fillStyle = TEXT_COLOR;
 
-      sentence.forEach(function(item, j) {
+      lines.forEach(function(item, j) {
         this.ctx.fillText(item, startX + PADDING_LEFT, startY + ((j + 1) * LINE_HEIGHT) + PADDING_TOP - TEXT_OFFSET);
       }, this);
     },
@@ -431,16 +456,16 @@ define('game', ['./utils', './parallax-clouds'], function(utils, parallaxClouds)
     _drawPauseScreen: function() {
       switch (this.state.currentStatus) {
         case Verdict.WIN:
-          this._drawTextRectangle([ 'Эпик-вин!', 'Я только что', 'сжег дерево' ]);
+          this._drawTextRectangle('Эпик-вин!, я только что сжег огромное дерево!11');
           break;
         case Verdict.FAIL:
-          this._drawTextRectangle([ 'Продул', 'все, что', 'можно' ]);
+          this._drawTextRectangle('Продул, все, что можно');
           break;
         case Verdict.PAUSE:
-          this._drawTextRectangle([ 'Музыкальная', 'пауза вместе', 'с Басковым!!' ]);
+          this._drawTextRectangle('Музыкальная, пауза вместе с Басковым!!');
           break;
         case Verdict.INTRO:
-          this._drawTextRectangle([ 'Поиграй', 'со мной', 'нежно', 'пожалуйста!' ]);
+          this._drawTextRectangle('Поиграй со мной нежно, пожалуйста!');
           break;
       }
     },
