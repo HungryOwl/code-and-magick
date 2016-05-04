@@ -475,6 +475,22 @@ input[type=radio]:checked + .review-mark-label {
   vertical-align: top;
 }
 
+.review-require-warning {
+  display: inline-block;
+
+  margin-top: -5px;
+
+  padding-top: 10px;
+  padding-bottom: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+
+  font-size: 14px;
+  color: red;
+
+  background-color: white;
+}
+
 .review-submit {
   margin-right: 20px;
   padding: 0 16px;

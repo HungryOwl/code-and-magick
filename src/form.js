@@ -3,7 +3,6 @@
  * Валидируем форму
  */
 define('form', ['./utils', 'browser-cookies'], function(utils, browserCookies) {
-  var i;
   var formContainer = document.querySelector('.overlay-container');
   var formOpenButton = document.querySelector('.reviews-controls-new');
   var formCloseButton = document.querySelector('.review-form-close');
@@ -64,6 +63,28 @@ define('form', ['./utils', 'browser-cookies'], function(utils, browserCookies) {
   var COOKIE_REVIEW_NAME = 'review-name';
   var COOKIE_REVIEW_MARK = 'review-mark';
 
+  var textWarningWindow, nameWarningWindow;
+
+  function showError(input) {
+    return function() {
+      var reviewWarning;
+      var reviewNode = input.parentNode.querySelector('.review-require-warning');
+
+      if (!reviewNode && !input.validity.valid) {
+        reviewWarning = document.createElement('div');
+        input.parentNode.appendChild(reviewWarning);
+        reviewWarning.classList.add('review-require-warning');
+        reviewWarning.textContent = input.validationMessage;
+        utils.setBlockHidden(reviewWarning, input.validity.valid);
+      }
+
+      if (reviewNode) {
+        reviewWarning = reviewNode;
+        utils.setBlockHidden(reviewWarning, input.validity.valid);
+      }
+    };
+  }
+
   function isInputCorrect(element) {
     return !element.required || Boolean(element.value.trim());
   }
@@ -95,39 +116,6 @@ define('form', ['./utils', 'browser-cookies'], function(utils, browserCookies) {
 
     reviewSubmit.disabled = !isFormCorrect;
   }
-
-  reviewName.value = browserCookies.get(COOKIE_REVIEW_NAME) || reviewName.value;
-  reviewMarkCollection.value = browserCookies.get(COOKIE_REVIEW_MARK) || reviewMarkCollection.value;
-
-  validateForm();
-
-  /**
-   * Пробегаемся по всем радиокнопкам в массиве-коллекции радиокнопок формы
-   */
-  for (i = 0; i < reviewMarkCollection.length; i++) {
-    /**
-     * Обращение к элементу коллекции по индексу
-     */
-    reviewMarkCollection[i].addEventListener('change', validateForm);
-  }
-
-  /**
-   * При изменении каждого элемента проверяем всю форму, см. validateForm
-   */
-  reviewName.addEventListener('input', validateForm);
-  reviewText.addEventListener('input', validateForm);
-
-  formOpenButton.onclick = function(evt) {
-    evt.preventDefault();
-
-    utils.setBlockHidden(formContainer, false);
-  };
-
-  formCloseButton.onclick = function(evt) {
-    evt.preventDefault();
-
-    utils.setBlockHidden(formContainer, true);
-  };
 
   /**
    * Вычисляем количество дней, прошедших со дня моего рождения до текущей даты
@@ -166,6 +154,39 @@ define('form', ['./utils', 'browser-cookies'], function(utils, browserCookies) {
     return Math.floor((today - birthday) / MS_IN_DAY);
   }
 
+  function onOpenClick() {
+    utils.setBlockHidden(formContainer, false);
+  }
+
+  function onCloseClick() {
+    utils.setBlockHidden(formContainer, true);
+  }
+
+  textWarningWindow = showError(reviewText);
+  nameWarningWindow = showError(reviewName);
+
+  reviewName.value = browserCookies.get(COOKIE_REVIEW_NAME) || reviewName.value;
+  reviewMarkCollection.value = browserCookies.get(COOKIE_REVIEW_MARK) || reviewMarkCollection.value;
+
+  validateForm();
+
+  /**
+   * Пробегаемся по всем радиокнопкам и вешаем листенеры с валидацией формы
+   */
+  Array.prototype.forEach.call(reviewMarkCollection, function(mark) {
+    mark.addEventListener('change', validateForm);
+    mark.addEventListener('change', textWarningWindow);
+  });
+
+  /**
+   * При изменении каждого элемента проверяем всю форму, см. validateForm
+   */
+  reviewName.addEventListener('input', validateForm);
+  reviewText.addEventListener('input', validateForm);
+
+  reviewText.addEventListener('change', textWarningWindow);
+  reviewName.addEventListener('change', nameWarningWindow);
+
   /**
    * Записываем Куки перед отправкой формы
    */
@@ -175,4 +196,7 @@ define('form', ['./utils', 'browser-cookies'], function(utils, browserCookies) {
     browserCookies.set(COOKIE_REVIEW_NAME, reviewName.value, cookieOptExpires);
     browserCookies.set(COOKIE_REVIEW_MARK, reviewMarkCollection.value, cookieOptExpires);
   });
+
+  formOpenButton.addEventListener('click', onOpenClick);
+  formCloseButton.addEventListener('click', onCloseClick);
 });
