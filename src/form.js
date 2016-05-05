@@ -72,10 +72,10 @@ define('form', ['./utils', 'browser-cookies'], function(utils, browserCookies) {
 
       if (!reviewNode && !input.validity.valid) {
         reviewWarning = document.createElement('div');
-        input.parentNode.appendChild(reviewWarning);
         reviewWarning.classList.add('review-require-warning');
         reviewWarning.textContent = input.validationMessage;
         utils.setBlockHidden(reviewWarning, input.validity.valid);
+        input.parentNode.appendChild(reviewWarning);
       }
 
       if (reviewNode) {
