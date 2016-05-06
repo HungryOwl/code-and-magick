@@ -10,8 +10,6 @@ define('baseDom', ['./utils'], function(utils) {
     this.element = this.elementToClone.cloneNode(true);
 
     this.append(parentNode);
-
-    this.onClick = this.onClick.bind(this);
   }
 
   DOMComponent.prototype.elementToClone = function(template, innerSelector) {
@@ -24,10 +22,6 @@ define('baseDom', ['./utils'], function(utils) {
     parentNode.appendChild(this.element);
 
     return this;
-  };
-
-  DOMComponent.prototype.onClick = function() {
-    console.log('я кликнул по', this.element);
   };
 
   DOMComponent.prototype.remove = function() {

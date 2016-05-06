@@ -101,8 +101,12 @@ define('reviews', ['../utils', './review'], function(utils, Review) {
     someReviews.forEach(function(data) {
       var review = new Review(data);
       renderedReviews.push(review);
-      reviewsContainer.appendChild(review.element);
       console.dir(review);
+
+      review.append(reviewsContainer);
+
+      /*reviewsContainer.appendChild(review.element);*/
+
     });
   }
 
