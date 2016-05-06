@@ -1,6 +1,6 @@
 'use strict';
 
-define('baseDom', function() {
+define('baseDom', ['./utils'], function(utils) {
 
   function DOMComponent(template, innerSelector, parentNode) {
     this.templateElement = document.querySelector(template);
@@ -15,18 +15,13 @@ define('baseDom', function() {
   }
 
   DOMComponent.prototype.elementToClone = function(template, innerSelector) {
-    if ('content' in this.templateElement) {
-      this.elementToClone = this.templateElement.content.querySelector(innerSelector);
-    } else {
-      this.elementToClone = this.templateElement.querySelector(innerSelector);
-    }
+    utils.getTemplateClone(template, innerSelector);
 
     return this;
   };
 
   DOMComponent.prototype.append = function(parentNode) {
     parentNode.appendChild(this.element);
-    this.element.addEventListener('click', this.onClick);
 
     return this;
   };
@@ -35,10 +30,8 @@ define('baseDom', function() {
     console.log('я кликнул по', this.element);
   };
 
-  DOMComponent.prototype.remove = function(parentNode) {
-    this.element.removeEventListener('click', this.onClick);
-    parentNode.removeChild(this.element);
-    this.element = '';
+  DOMComponent.prototype.remove = function() {
+    this.element.parentNode.removeChild(this.element);
   };
 
   return DOMComponent;

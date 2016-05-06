@@ -33,7 +33,7 @@ define('review', ['./template', '../baseDom', '../utils'], function(getReviewEle
 
   Review.prototype.remove = function() {
     this.quiz.removeEventListener('click', this.onQuizClick);
-    this.element.parentNode.removeChild(this.element);
+    DOMComponent.prototype.remove.call(this);
   };
 
   return Review;
