@@ -152,6 +152,13 @@ define('utils', function() {
     };
   }
 
+  function inherit(child, parent) {
+    function EmptyCtor() {}
+
+    EmptyCtor.prototype = parent.prototype;
+    child.prototype = new EmptyCtor();
+  }
+
   /**
    * Объект с названиями функций (в значениях объекта - сами функции)
    */
@@ -161,6 +168,7 @@ define('utils', function() {
     getTemplateClone: getTemplateClone,
     throttle: throttle,
     setBlockHidden: setBlockHidden,
-    listenKey: listenKey
+    listenKey: listenKey,
+    inherit: inherit
   };
 });

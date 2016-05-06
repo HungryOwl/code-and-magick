@@ -102,6 +102,7 @@ define('reviews', ['../utils', './review'], function(utils, Review) {
       var review = new Review(data);
       renderedReviews.push(review);
       reviewsContainer.appendChild(review.element);
+      console.dir(review);
     });
   }
 

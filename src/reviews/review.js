@@ -1,6 +1,6 @@
 'use strict';
 
-define('review', ['./template'], function(getReviewElement) {
+define('review', ['./template', '../baseDom', '../utils'], function(getReviewElement, DOMComponent, utils) {
   /**
    * Конструктор отзыва
    * @param {object} data Данные, полученные по xhr
@@ -16,6 +16,8 @@ define('review', ['./template'], function(getReviewElement) {
 
     this.quiz.addEventListener('click', this.onQuizClick);
   }
+
+  utils.inherit(Review, DOMComponent);
 
   Review.prototype.onQuizClick = function(evt) {
     var quizActive = this.quiz.querySelector('.review-quiz-answer-active');
