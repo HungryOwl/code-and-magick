@@ -3,11 +3,8 @@
 define('baseDom', ['./utils'], function(utils) {
 
   function DOMComponent(template, innerSelector, parentNode) {
-    this.templateElement = document.querySelector(template);
-
-    this.elementToClone(template, innerSelector);
-
-    this.element = this.elementToClone.cloneNode(true);
+    this.remove = this.remove.bind(this);
+    this.append = this.append.bind(this);
 
     this.append(parentNode);
   }

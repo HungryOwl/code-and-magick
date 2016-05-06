@@ -36,9 +36,5 @@ define('review', ['./template', '../baseDom', '../utils'], function(getReviewEle
     DOMComponent.prototype.remove.call(this);
   };
 
-  Review.prototype.append = function(parentNode) {
-    DOMComponent.prototype.append.call(this, parentNode);
-  };
-
   return Review;
 });

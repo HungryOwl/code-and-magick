@@ -104,9 +104,6 @@ define('reviews', ['../utils', './review'], function(utils, Review) {
       console.dir(review);
 
       review.append(reviewsContainer);
-
-      /*reviewsContainer.appendChild(review.element);*/
-
     });
   }
 
