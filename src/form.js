@@ -53,13 +53,6 @@ define('form', ['./utils', 'browser-cookies'], function(utils, browserCookies) {
    */
   var reviewMarkCollection = form.elements['review-mark'];
 
-  /**
-   * Проверяем, правильно ли заполнено любое поле
-   * @param {HTMLInputElement|HTMLTextAreaElement} element Проверяемый инпут
-   * @returns {Boolean} Верно ли он заполнен
-   * @see https://developer.mozilla.org/en-US/docs/Web/API/HTMLTextAreaElement
-   */
-
   var COOKIE_REVIEW_NAME = 'review-name';
   var COOKIE_REVIEW_MARK = 'review-mark';
 
@@ -84,7 +77,13 @@ define('form', ['./utils', 'browser-cookies'], function(utils, browserCookies) {
       }
     };
   }
-
+  
+  /**
+   * Проверяем, правильно ли заполнено любое поле
+   * @param {HTMLInputElement|HTMLTextAreaElement} element Проверяемый инпут
+   * @returns {Boolean} Верно ли он заполнен
+   * @see https://developer.mozilla.org/en-US/docs/Web/API/HTMLTextAreaElement
+   */
   function isInputCorrect(element) {
     return !element.required || Boolean(element.value.trim());
   }
